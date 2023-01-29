@@ -2,6 +2,7 @@ import random
 import pygame
 
 from data.pondData import PondData
+from fish import Fish
 
 
 class Pond:
@@ -9,25 +10,11 @@ class Pond:
 
     def __init__(self):
         self.name: str = "doo-pond"
-        self.capacity: int = 1000
-        self.fish_count = 0
-        self.fishes = []
-        self.spawn_rate = 0.05
-        self.time_since_last_spawn = 0
+        self.all_sprites = pygame.sprite.Group()
 
-        # data
-        self.pond_data: PondData = PondData(self.name)
-        self.network = None
-
-        # pygame
-        self.sprites = pygame.sprite.Group()
-        self.clock = pygame.time.Clock()
-
-    def spawn_fish(self) -> None:
-        pass
-
-    def shutdown(self):
-        pass
+    def spawn_fish(self, genesis):
+        fish = Fish(genesis)
+        self.all_sprites.add(fish)
 
     def migrate(self):
         pass
@@ -35,10 +22,13 @@ class Pond:
     def run(self):
         pygame.init()
         screen = pygame.display.set_mode(Pond.__WINDOW_SIZE)
-        bg = pygame.image.load("./src/assets/backgound.jpg")
+        bg = pygame.image.load("./src/assets/background.jpg")
         bg = pygame.transform.scale(bg, Pond.__WINDOW_SIZE)
         pygame.display.set_caption("Fish Haven [Doo Pond]")
         clock = pygame.time.Clock()
+
+        self.spawn_fish("doo-pond")
+        self.spawn_fish("other")
 
         running = True
         while running:
@@ -47,8 +37,9 @@ class Pond:
                 if event.type == pygame.QUIT:
                     running = False
 
-            screen.fill((0, 0, 0))
-            screen.blit(bg, (0, 0))
+            self.all_sprites.update()  # update all sprites in the group
+            screen.blit(bg, (0, 0))  # render background image
+            self.all_sprites.draw(screen)  # draw all sprites in the group
 
             pygame.display.flip()
             clock.tick(60)
