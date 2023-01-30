@@ -6,7 +6,7 @@ class Fish(pygame.sprite.Sprite):
     def __init__(self, genesis: str):
         super().__init__()
 
-        self.direction = "left"
+        self.direction = random.choice(["left", "right"])
         self.current_frame = 0
         self.sprites: dict[str, list[pygame.Surface]] = {
             "left": [],
@@ -35,18 +35,17 @@ class Fish(pygame.sprite.Sprite):
 
     def move(self):
         if self.direction == "left":
-            self.rect.x -= 5
+            self.rect.x -= random.randint(1, 3)
             if self.rect.x <= 0:
                 self.direction = "right"
         else:
-            self.rect.x += 5
+            self.rect.x += random.randint(1, 3)
             if self.rect.x >= 1280 - self.rect.width:
                 self.direction = "left"
 
     def update(self):
-        self.current_frame = (self.current_frame +
-                              1) % len(self.sprites[self.direction])
-        self.image = self.sprites[self.direction][self.current_frame]
+        self.current_frame = (self.current_frame + 0.1) % len(self.sprites[self.direction])
+        self.image = self.sprites[self.direction][int(self.current_frame)]
         self.move()
 
     def die(self):
