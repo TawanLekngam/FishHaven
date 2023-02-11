@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import QMainWindow, QWidget, QApplication
+from PySide6.QtWidgets import QMainWindow, QApplication
 
 
 class DashBoard(QMainWindow):
