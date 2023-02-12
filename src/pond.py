@@ -4,7 +4,7 @@ import threading
 
 from PySide6.QtWidgets import QApplication
 
-from components import Dashboard
+from components.Dashboard import DashBoard
 from FishSprite import FishSprite
 from utils.FishFactory import FishFactory
 
@@ -54,7 +54,7 @@ class Pond:
                     print("press button")
                     if event.key == pygame.K_LEFT:
                         print("open dashboard")
-                        _ = Dashboard.DashBoard()
+                        _ = DashBoard()
                         pond_handler = threading.Thread(target=app.exec_)
                         pond_handler.start()
 
