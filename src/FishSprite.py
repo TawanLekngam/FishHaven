@@ -34,7 +34,7 @@ class FishSprite(pygame.sprite.Sprite):
 
         for i in range(1, 5):
             image_path = f"{target_path}/{i}.png"
-            image = pygame.image.load(image_path)
+            image = pygame.image.load(image_path).convert_alpha()
             image_left = pygame.transform.scale(image, (100, 100))
             image_right = pygame.transform.flip(image_left, True, False)
             self.sprites["left"].append(image_left)

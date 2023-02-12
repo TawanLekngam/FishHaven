@@ -34,7 +34,7 @@ class Pond:
     def run(self):
         pygame.init()
         screen = pygame.display.set_mode(Pond.__WINDOW_SIZE)
-        background = pygame.image.load("./src/assets/background.jpg")
+        background = pygame.image.load("./src/assets/background.jpg").convert()
         background = pygame.transform.scale(background, Pond.__WINDOW_SIZE)
         pygame.display.set_caption("Fish Haven [Doo Pond]")
         clock = pygame.time.Clock()
@@ -52,7 +52,7 @@ class Pond:
 
                 if event.type == pygame.KEYDOWN:
                     print("press button")
-                    if event.key == pygame.K_LEFT:
+                    if event.key == pygame.K_d:
                         print("open dashboard")
                         _ = DashBoard()
                         pond_handler = threading.Thread(target=app.exec_)
