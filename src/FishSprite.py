@@ -3,6 +3,7 @@ import random
 import pygame
 
 from models.Fish import Fish
+from scripts.movement import Movement, BounceMovement, VerticalMovement
 
 
 BASE_DIR = os.path.split(os.path.abspath(__file__))[0]
@@ -10,7 +11,7 @@ ASSET_DIR = os.path.join(BASE_DIR, "assets")
 
 
 class FishSprite(pygame.sprite.Sprite):
-    def __init__(self, fish: Fish):
+    def __init__(self, fish: Fish, movement: Movement = VerticalMovement(3)):
         super().__init__()
         self.fish = fish
 
@@ -21,12 +22,13 @@ class FishSprite(pygame.sprite.Sprite):
             "left": [],
             "right": []
         }
-        self.__load_sprite('doo-pond')
+        self.__load_sprite(fish.get_genesis())
         self.image = self.sprites[self.direction][self.frame]
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, 1280 - self.rect.width)
         self.rect.y = random.randint(0, 720 - self.rect.height)
-        self.speed = random.randint(1, 3)
+
+        self.movement = movement
 
     def __load_sprite(self, genesis: str):
         pond_type = "local_pond" if genesis == "doo-pond" else "foreign_pond"
@@ -42,16 +44,6 @@ class FishSprite(pygame.sprite.Sprite):
 
         self.frame = 0
 
-    def __move(self):
-        if self.direction == "left":
-            self.rect.x -= self.speed
-            if self.rect.x <= 0:
-                self.direction = "right"
-        else:
-            self.rect.x += self.speed
-            if self.rect.x >= 1280 - self.rect.width:
-                self.direction = "left"
-
     def tick_lifespan(self):
         if self.fish.is_immortal:
             return
@@ -64,10 +56,13 @@ class FishSprite(pygame.sprite.Sprite):
                 self.kill()
         print(f"id:{self.fish.id} lifespan:{self.fish.lifespan}")
 
+    def get_data(self):
+        return self.fish
+
     def update(self):
+        self.movement.move(self)
         self.frame = (self.frame + 0.1) % len(self.sprites[self.direction])
         self.image = self.sprites[self.direction][int(self.frame)]
-        self.__move()
 
     def die(self):
         self.kill()
