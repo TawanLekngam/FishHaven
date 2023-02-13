@@ -3,7 +3,6 @@ import redis
 import time
 
 
-from typing import List, Union
 from logging import getLogger
 
 from models.Fish import Fish
@@ -12,7 +11,7 @@ from FishSprite import FishSprite
 log = getLogger("redis")
 
 
-def connect_to_redis(host="localhost", port=6379, password=None, retries=5, retry_interval=1, db=0) -> Union[redis.StrictRedis, None]:
+def connect_to_redis(host="localhost", port=6379, password=None, retries=5, retry_interval=1, db=0) -> redis.StrictRedis | None:
     for i in range(retries):
         try:
             r = redis.StrictRedis(host=host,
@@ -40,10 +39,12 @@ class Storage:
     def __init__(self, target_redis):
         self.redis: redis.StrictRedis = target_redis
 
-    def add_fish(self, fish: Fish): 
-        self.redis.set(fish.get_id(), pickle.dumps(fish), ex=fish.get_lifespan())
+    def add_fish(self, fish: Fish):
+        self.redis.set(fish.get_id(),
+                       pickle.dumps(fish),
+                       ex=fish.get_lifespan())
 
-    def remove_fish(self, ids: List[str]):
+    def remove_fish(self, ids: list[str]):
         self.redis.delete(*ids)
 
     def get_fishes(self):
