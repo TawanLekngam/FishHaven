@@ -54,7 +54,7 @@ class FishSprite(pygame.sprite.Sprite):
             if self.fish.lifespan <= 0:
                 self.fish.is_alive = False
                 self.kill()
-        print(f"id:{self.fish.id} lifespan:{self.fish.lifespan}")
+        # print(f"id:{self.fish.id} lifespan:{self.fish.lifespan}")
 
     def get_data(self):
         return self.fish
