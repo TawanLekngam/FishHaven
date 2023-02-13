@@ -44,8 +44,11 @@ class Pond:
         update_time = pygame.time.get_ticks()
 
         self.load_fishes()
+        self.spawn_fish()
 
         app = QApplication(sys.argv)
+        dashboard: DashBoard = None
+
 
         running = True
         while running:
@@ -63,6 +66,10 @@ class Pond:
             if time_since_update >= 1000:
                 self.__tick_lifespan()
                 update_time = pygame.time.get_ticks()
+
+            if dashboard:
+                # TODO update dashboard
+                pass
 
             self.all_sprites.update()  # update all sprites in the group
             screen.blit(background, (0, 0))  # render background image

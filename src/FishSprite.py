@@ -11,7 +11,7 @@ ASSET_DIR = os.path.join(BASE_DIR, "assets")
 
 
 class FishSprite(pygame.sprite.Sprite):
-    def __init__(self, fish: Fish, movement: Movement = VerticalMovement(3)):
+    def __init__(self, fish: Fish, movement: Movement = BounceMovement(3)):
         super().__init__()
         self.fish = fish
 
