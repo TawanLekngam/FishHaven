@@ -5,21 +5,25 @@ import threading
 from PySide6.QtWidgets import QApplication
 
 from components.Dashboard import DashBoard
-from FishSprite import FishSprite
 from utils.FishFactory import FishFactory
+
+from FishSprite import FishSprite
+from Storage import Storage
 
 
 class Pond:
     __WINDOW_SIZE = (1280, 720)
 
-    def __init__(self):
-        self.name: str = "doo-pond"
-        self.all_sprites: pygame.sprite.Group[FishSprite] = pygame.sprite.Group(
-        )
+    def __init__(self, name: str, storage: Storage):
+        self.name: str = name
+        self.storage: Storage = storage
+
+        self.all_sprites: pygame.sprite.Group[FishSprite] = pygame.sprite.Group()
 
     def spawn_fish(self):
         fish = FishFactory.generate_fish()
         fish_sprite = FishSprite(fish)
+        self.storage.add_fish(fish)
         self.all_sprites.add(fish_sprite)
 
     def __tick_lifespan(self):
@@ -27,22 +31,24 @@ class Pond:
             fish.tick_lifespan()
 
     def load_fishes(self):
-        # TODO: Replace with database fetches
-        for _ in range(5):
-            self.spawn_fish()
+        for fish in self.storage.get_fishes().values():
+            self.all_sprites.add(fish)
 
     def run(self):
         pygame.init()
         screen = pygame.display.set_mode(Pond.__WINDOW_SIZE)
-        background = pygame.image.load("./src/assets/background.jpg")
+        background = pygame.image.load("./src/assets/background.jpg").convert()
         background = pygame.transform.scale(background, Pond.__WINDOW_SIZE)
         pygame.display.set_caption("Fish Haven [Doo Pond]")
         clock = pygame.time.Clock()
         update_time = pygame.time.get_ticks()
 
         self.load_fishes()
+        self.spawn_fish()
 
         app = QApplication(sys.argv)
+        dashboard: DashBoard = None
+
 
         running = True
         while running:
@@ -51,10 +57,8 @@ class Pond:
                     running = False
 
                 if event.type == pygame.KEYDOWN:
-                    print("press button")
-                    if event.key == pygame.K_LEFT:
-                        print("open dashboard")
-                        _ = DashBoard()
+                    if event.key == pygame.K_d:
+                        dashboard = DashBoard()
                         pond_handler = threading.Thread(target=app.exec_)
                         pond_handler.start()
 
@@ -62,6 +66,10 @@ class Pond:
             if time_since_update >= 1000:
                 self.__tick_lifespan()
                 update_time = pygame.time.get_ticks()
+
+            if dashboard:
+                # TODO update dashboard
+                pass
 
             self.all_sprites.update()  # update all sprites in the group
             screen.blit(background, (0, 0))  # render background image
