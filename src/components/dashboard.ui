@@ -38,7 +38,6 @@
    </property>
    <property name="font">
     <font>
-     <family>Poppins</family>
      <pointsize>36</pointsize>
      <bold>true</bold>
     </font>
@@ -49,71 +48,6 @@
    <property name="text">
     <string>Fish Haven Vivisystem Dashboard</string>
    </property>
-  </widget>
-  <widget class="QWidget" name="widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>140</y>
-     <width>480</width>
-     <height>231</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: &quot;#FFF7F0&quot;; border-radius:8;</string>
-   </property>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>60</y>
-      <width>281</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Poppins</family>
-      <pointsize>24</pointsize>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: &quot;black&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Doo Pond Fishes</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>130</y>
-      <width>281</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Poppins</family>
-      <pointsize>36</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:&quot;black&quot;;</string>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
   </widget>
   <widget class="QWidget" name="widget_2" native="true">
    <property name="geometry">
@@ -138,7 +72,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>24</pointsize>
       <bold>false</bold>
      </font>
@@ -164,7 +97,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>36</pointsize>
       <bold>true</bold>
      </font>
@@ -203,7 +135,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>24</pointsize>
       <bold>false</bold>
      </font>
@@ -212,7 +143,7 @@
      <string notr="true">color: &quot;black&quot;;</string>
     </property>
     <property name="text">
-     <string>Khor Pond</string>
+     <string>Mega Pond</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -229,7 +160,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>36</pointsize>
       <bold>true</bold>
      </font>
@@ -268,7 +198,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>24</pointsize>
       <bold>false</bold>
      </font>
@@ -294,7 +223,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>36</pointsize>
       <bold>true</bold>
      </font>
@@ -333,7 +261,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>24</pointsize>
       <bold>false</bold>
      </font>
@@ -342,7 +269,7 @@
      <string notr="true">color: &quot;black&quot;;</string>
     </property>
     <property name="text">
-     <string>Auay Pond</string>
+     <string>Matrix Pond</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -359,7 +286,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>36</pointsize>
       <bold>true</bold>
      </font>
@@ -398,7 +324,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>24</pointsize>
       <bold>false</bold>
      </font>
@@ -424,7 +349,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>24</pointsize>
       <bold>true</bold>
      </font>
@@ -450,7 +374,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>24</pointsize>
       <bold>false</bold>
      </font>
@@ -493,7 +416,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Poppins</family>
       <pointsize>16</pointsize>
       <bold>true</bold>
      </font>
@@ -528,7 +450,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Poppins</family>
        <pointsize>12</pointsize>
       </font>
      </property>
@@ -553,7 +474,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Poppins</family>
        <pointsize>24</pointsize>
        <bold>true</bold>
       </font>
@@ -592,7 +512,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Poppins</family>
        <pointsize>12</pointsize>
       </font>
      </property>
@@ -617,7 +536,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Poppins</family>
        <pointsize>24</pointsize>
        <bold>true</bold>
       </font>
@@ -656,7 +574,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Poppins</family>
        <pointsize>12</pointsize>
       </font>
      </property>
@@ -681,7 +598,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Poppins</family>
        <pointsize>24</pointsize>
        <bold>true</bold>
       </font>
@@ -720,7 +636,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Poppins</family>
        <pointsize>12</pointsize>
       </font>
      </property>
@@ -745,7 +660,6 @@
      </property>
      <property name="font">
       <font>
-       <family>Poppins</family>
        <pointsize>24</pointsize>
        <bold>true</bold>
       </font>
@@ -772,6 +686,132 @@
     </property>
     <property name="styleSheet">
      <string notr="true">background-color:white;</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="widget_11" native="true">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>140</y>
+     <width>231</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: &quot;#FFF3F1&quot;; border-radius:8;</string>
+   </property>
+   <widget class="QLabel" name="label_24">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: &quot;black&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Khor Pond</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_25">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>191</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>36</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:&quot;black&quot;;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="widget_12" native="true">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>140</y>
+     <width>231</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: &quot;#EEF1FF&quot;; border-radius:8;</string>
+   </property>
+   <widget class="QLabel" name="label_26">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: &quot;black&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Doo Pond</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_27">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>191</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>36</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:&quot;black&quot;;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
