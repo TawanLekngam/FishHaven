@@ -69,7 +69,7 @@ class Pond:
 
             if dashboard:
                 # TODO update dashboard
-                pass
+                dashboard.update(doo_pond=len(self.all_sprites))
 
             self.all_sprites.update()  # update all sprites in the group
             screen.blit(background, (0, 0))  # render background image

@@ -13,10 +13,10 @@ class PondWidget(QWidget):
 
     def __init__(self, parent: QWidget, pond_name: str, fish_count: int = 0):
         super().__init__(parent)
-        self.setFixedSize(QSize(150, 90))
+        # self.setFixedSize(QSize(150, 90))
 
         frame = QFrame(self)
-        frame.setFixedSize(QSize(150, 90))
+        # frame.setFixedSize(QSize(150, 90))
         frame.setStyleSheet('background-color:"#FFF3F1";border-radius:8;')
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignCenter)

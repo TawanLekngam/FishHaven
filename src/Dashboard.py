@@ -1,7 +1,10 @@
 import sys
 import time
-from PySide6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout)
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (QApplication,
+                               QMainWindow,
+                               QLabel)
+from PySide6.QtCore import (Qt, QRect)
+from PySide6.QtGui import QFont
 
 from components import PondWidget
 
@@ -15,25 +18,35 @@ class DashBoard(QMainWindow):
         self.__init_ui()
 
     def __init_ui(self):
+
+        FONT_BOLD_36 = QFont('Poppins')
+        FONT_BOLD_36.setPixelSize(36)
+        FONT_BOLD_36.setBold(True)
+
         self.setFixedSize(1280, 720)
         self.setStyleSheet('background-color: white;')
         self.setWindowTitle("Pond Dashboard")
 
-        layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignTop)
+        title = QLabel('Fish Haven Dashboard', self)
+        title.setGeometry(QRect(80, 50, 641, 51))
+        title.setFont(FONT_BOLD_36)
+        title.setStyleSheet('color: black;')
 
-        self.pond_count = PondWidget(self, "Doo Pond", 3)
-        self.last_update = time.time()
+        self.dp = PondWidget(self, "Doo Pond")
+        self.dp.setGeometry(QRect(80, 140, 231, 231))
 
-        layout.addWidget(self.pond_count)
-        self.setLayout(layout)
         self.show()
 
-    def update(self):
+        self.last_update = time.time()
+
+    def update(self, **kwargs):
         current_time = time.time()
         if current_time - self.last_update < DashBoard.__UPDATE_DELAY:
             return
         self.last_update = current_time
+
+        if "doo_pond" in kwargs:
+            self.dp.update(kwargs["doo_pond"])
 
 
 if __name__ == "__main__":
