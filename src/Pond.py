@@ -4,11 +4,11 @@ import threading
 
 from PySide6.QtWidgets import QApplication
 
-from components.Dashboard import DashBoard
 from utils.FishFactory import FishFactory
 
 from FishSprite import FishSprite
 from Storage import Storage
+from Dashboard import DashBoard
 
 
 class Pond:

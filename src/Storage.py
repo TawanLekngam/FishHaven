@@ -5,7 +5,7 @@ import time
 
 from logging import getLogger
 
-from models.Fish import Fish
+from models import Fish
 from FishSprite import FishSprite
 
 log = getLogger("redis")
