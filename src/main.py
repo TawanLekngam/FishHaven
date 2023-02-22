@@ -1,12 +1,8 @@
 import os
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "true"
 
-
-from Pond import Pond
 from Storage import Storage, connect_to_redis
-
-
-
+from Pond import Pond
 
 def main():
     r = connect_to_redis()

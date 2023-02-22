@@ -3,14 +3,14 @@ import time
 from PySide6.QtWidgets import (QApplication,
                                QMainWindow,
                                QLabel)
-from PySide6.QtCore import (Qt, QRect)
+from PySide6.QtCore import (QRect)
 from PySide6.QtGui import QFont
 
 from components import PondWidget
 
 
 class DashBoard(QMainWindow):
-    __UPDATE_DELAY = 2
+    __UPDATE_DELAY = 1
 
     def __init__(self, fishs: list = None):
         super().__init__()
@@ -34,8 +34,6 @@ class DashBoard(QMainWindow):
 
         self.dp = PondWidget(self, "Doo Pond")
         self.dp.setGeometry(QRect(80, 140, 231, 231))
-
-        self.show()
 
         self.last_update = time.time()
 

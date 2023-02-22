@@ -1,6 +1,5 @@
 import pygame
 import sys
-import threading
 
 from PySide6.QtWidgets import QApplication
 
@@ -47,8 +46,7 @@ class Pond:
         self.spawn_fish()
 
         app = QApplication(sys.argv)
-        dashboard: DashBoard = None
-
+        dashboard = DashBoard()
 
         running = True
         while running:
@@ -58,18 +56,15 @@ class Pond:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_d:
-                        dashboard = DashBoard()
-                        pond_handler = threading.Thread(target=app.exec_)
-                        pond_handler.start()
+                        dashboard.show()
 
             time_since_update = pygame.time.get_ticks() - update_time
             if time_since_update >= 1000:
                 self.__tick_lifespan()
                 update_time = pygame.time.get_ticks()
 
-            if dashboard:
-                # TODO update dashboard
-                dashboard.update(doo_pond=len(self.all_sprites))
+
+            dashboard.update(doo_pond=len(self.all_sprites))
 
             self.all_sprites.update()  # update all sprites in the group
             screen.blit(background, (0, 0))  # render background image
@@ -77,5 +72,6 @@ class Pond:
 
             pygame.display.flip()
             clock.tick(60)
+            app.processEvents()
 
         pygame.quit()
