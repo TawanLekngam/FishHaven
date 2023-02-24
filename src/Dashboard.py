@@ -10,8 +10,6 @@ from components import PondWidget
 
 
 class DashBoard(QMainWindow):
-    __UPDATE_DELAY = 1
-
     def __init__(self, fishs: list = None):
         super().__init__()
         self.fishs = fishs
@@ -39,7 +37,7 @@ class DashBoard(QMainWindow):
 
     def update(self, **kwargs):
         current_time = time.time()
-        if current_time - self.last_update < DashBoard.__UPDATE_DELAY:
+        if current_time - self.last_update < 1:
             return
         self.last_update = current_time
 
