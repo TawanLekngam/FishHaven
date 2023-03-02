@@ -23,18 +23,21 @@ class Dashboard(QMainWindow):
         FONT_REG_14 = QFont('Poppins')
         FONT_REG_14.setPixelSize(14)
 
+        FONT_REG_12 = QFont('Poppins')
+        FONT_REG_12.setPixelSize(12)
+
         self.stackedWidget = QStackedWidget(self)
         self.stackedWidget.setGeometry(QRect(30, 30, 1381, 841))
 
         self.doo_pond_dashboard = DooPondDashboard(
-            self, FONT_BOLD_24, FONT_REG_14)
+            self, FONT_BOLD_24, FONT_REG_14, FONT_REG_12)
         self.stackedWidget.addWidget(self.doo_pond_dashboard)
 
         self.show()
 
 
 class DooPondDashboard(QWidget):
-    def __init__(self, parent: QWidget = None, FONT_BOLD_24=None, FONT_REG_14=None):
+    def __init__(self, parent: QWidget = None, FONT_BOLD_24=None, FONT_REG_14=None, FONT_REG_12=None):
         QWidget.__init__(self, parent)
 
         self.current_population = CurrentPopulation(
@@ -74,7 +77,7 @@ class DooPondDashboard(QWidget):
         self.line.setStyleSheet("background-color:gray;")
         self.line.setFrameShape(QFrame.VLine)
 
-        self.pond_log = PondLog(self, FONT_REG_14)
+        self.pond_log = PondLog(self, FONT_REG_14, FONT_REG_12)
         self.pond_log.setGeometry(QRect(920, 0, 461, 841))
 
 
@@ -336,7 +339,7 @@ class DeathDisaster(QFrame):
 
 
 class PondLog(QFrame):
-    def __init__(self, parent: QFrame, FONT_REG_14=None) -> None:
+    def __init__(self, parent: QFrame, FONT_REG_14=None, FONT_REG_12=None) -> None:
         QFrame.__init__(self, parent)
 
         self.setStyleSheet(
@@ -364,8 +367,52 @@ class PondLog(QFrame):
             "pond_log_scrollAreaWidgetContents")
         self.pond_log_scrollAreaWidgetContents.setGeometry(
             QRect(0, 0, 461, 801))
+
+        self.vbox = QVBoxLayout()
+        self.vbox.setAlignment(Qt.AlignTop)
+
+        self.pond_log_scrollAreaWidgetContents.setLayout(self.vbox)
+        self.pond_log_scrollAreaWidgetContents.layout().setContentsMargins(0, 0, 0, 0)
+        self.pond_log_scrollAreaWidgetContents.layout().setSpacing(0)
         self.pond_log_scrollArea.setWidget(
             self.pond_log_scrollAreaWidgetContents)
+
+        # Add more logs here
+        self.log_details1 = LogDetails(
+            self.pond_log_scrollAreaWidgetContents, FONT_REG_14, FONT_REG_12, "Fish 0012 died")
+        self.log_details2 = LogDetails(
+            self.pond_log_scrollAreaWidgetContents, FONT_REG_14, FONT_REG_12, "Fish 1234 moved")
+
+        self.pond_log_scrollAreaWidgetContents.layout().addWidget(self.log_details1)
+        self.pond_log_scrollAreaWidgetContents.layout().addWidget(self.log_details2)
+
+
+class LogDetails(QFrame):
+    def __init__(self, parent: QFrame, FONT_REG_14=None, FONT_REG_12=None, description=str) -> None:
+        QFrame.__init__(self, parent)
+        self.setFixedSize(461, 81)
+        self.setStyleSheet(
+            "border:none;")
+        self.setObjectName("log_details")
+
+        self.image_frame = QFrame(self)
+        self.image_frame.setObjectName("image_frame")
+        self.image_frame.setGeometry(QRect(10, 13, 54, 54))
+        self.image_frame.setStyleSheet(
+            "background-color:#E5ECF6;  border-radius:10;")
+
+        self.description = QLabel(description, self)
+        self.description.setObjectName("description")
+        self.description.setGeometry(QRect(80, 20, 371, 20))
+        self.description.setFont(FONT_REG_14)
+        self.description.setStyleSheet("color: black;")
+        self.description.setAlignment(Qt.AlignLeft)
+
+        self.time = QLabel("...m ago", self)
+        self.time.setObjectName("time")
+        self.time.setGeometry(QRect(80, 40, 371, 20))
+        self.time.setFont(FONT_REG_12)
+        self.time.setStyleSheet("color: gray;")
 
 
 if __name__ == "__main__":
