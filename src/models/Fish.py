@@ -28,3 +28,9 @@ class Fish:
 
     def get_id(self):
         return self.id
+    
+    def get_genesis(self):
+        return self.genesis
+    
+    def get_lifespan(self):
+        return self.lifespan
