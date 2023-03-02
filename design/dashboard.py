@@ -44,6 +44,9 @@ class DooPondDashboard(QWidget):
         self.dead_fishes = DeadFishes(self, FONT_BOLD_24, FONT_REG_14)
         self.dead_fishes.setGeometry(QRect(230, 60, 201, 111))
 
+        self.male_fishes = MaleFishes(self, FONT_BOLD_24, FONT_REG_14)
+        self.male_fishes.setGeometry(QRect(460, 60, 201, 111))
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
@@ -104,6 +107,36 @@ class DeadFishes(QFrame):
         self.dead_fishes_rate.setStyleSheet("color: black;")
         self.dead_fishes_rate.setAlignment(Qt.AlignRight)
 
+
+class MaleFishes(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "background-color: #F0FAFF; border-radius:10;")
+        self.setObjectName("male_fishes")
+
+        self.male_fishes_title = QLabel("Male Fishes", self)
+        self.male_fishes_title.setObjectName("male_fishes_title")
+        self.male_fishes_title.setGeometry(QRect(30, 30, 141, 20))
+        self.male_fishes_title.setFont(FONT_REG_14)
+        self.male_fishes_title.setStyleSheet("color: black;")
+        self.male_fishes_title.setAlignment(Qt.AlignLeft)
+
+        self.male_fishes_number = QLabel("0", self)
+        self.male_fishes_number.setObjectName("male_fishes_number")
+        self.male_fishes_number.setGeometry(QRect(30, 60, 91, 31))
+        self.male_fishes_number.setFont(FONT_BOLD_24)
+        self.male_fishes_number.setStyleSheet("color: black;")
+        self.male_fishes_number.setAlignment(Qt.AlignLeft)
+
+        self.male_fishes_rate = QLabel("0", self)
+        self.male_fishes_rate.setObjectName("male_fishes_rate")
+        self.male_fishes_rate.setGeometry(QRect(130, 67, 41, 16))
+        self.male_fishes_rate.setFont(FONT_REG_14)
+        self.male_fishes_rate.setStyleSheet("color: black;")
+        self.male_fishes_rate.setAlignment(Qt.AlignRight)
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
