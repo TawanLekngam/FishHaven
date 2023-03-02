@@ -60,6 +60,9 @@ class DooPondDashboard(QWidget):
         self.move_stress = MoveStress(self, FONT_BOLD_24, FONT_REG_14)
         self.move_stress.setGeometry(QRect(460, 590, 201, 111))
 
+        self.move_instinct = MoveInstinct(self, FONT_BOLD_24, FONT_REG_14)
+        self.move_instinct.setGeometry(QRect(690, 590, 201, 111))
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
@@ -227,6 +230,35 @@ class MoveStress(QFrame):
         self.move_stress_rate.setFont(FONT_REG_14)
         self.move_stress_rate.setStyleSheet("color: black;")
         self.move_stress_rate.setAlignment(Qt.AlignRight)
+
+class MoveInstinct(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "background-color: #EEF1FF; border-radius:10;")
+        self.setObjectName("move_instinct")
+
+        self.move_instinct_title = QLabel("Move Instinct", self)
+        self.move_instinct_title.setObjectName("move_instinct_title")
+        self.move_instinct_title.setGeometry(QRect(30, 30, 141, 20))
+        self.move_instinct_title.setFont(FONT_REG_14)
+        self.move_instinct_title.setStyleSheet("color: black;")
+        self.move_instinct_title.setAlignment(Qt.AlignLeft)
+
+        self.move_instinct_number = QLabel("0", self)
+        self.move_instinct_number.setObjectName("move_instinct_number")
+        self.move_instinct_number.setGeometry(QRect(30, 60, 91, 31))
+        self.move_instinct_number.setFont(FONT_BOLD_24)
+        self.move_instinct_number.setStyleSheet("color: black;")
+        self.move_instinct_number.setAlignment(Qt.AlignLeft)
+
+        self.move_instinct_rate = QLabel("0", self)
+        self.move_instinct_rate.setObjectName("move_instinct_rate")
+        self.move_instinct_rate.setGeometry(QRect(130, 67, 41, 16))
+        self.move_instinct_rate.setFont(FONT_REG_14)
+        self.move_instinct_rate.setStyleSheet("color: black;")
+        self.move_instinct_rate.setAlignment(Qt.AlignRight)
 
 
 if __name__ == "__main__":
