@@ -57,6 +57,9 @@ class DooPondDashboard(QWidget):
         self.genesis = Genesis(self, FONT_BOLD_24, FONT_REG_14)
         self.genesis.setGeometry(QRect(0, 590, 431, 251))
 
+        self.move_stress = MoveStress(self, FONT_BOLD_24, FONT_REG_14)
+        self.move_stress.setGeometry(QRect(460, 590, 201, 111))
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
@@ -195,6 +198,35 @@ class Genesis(QFrame):
             "border:2px solid; border-color: #F7F9FB; border-radius:10;")
         self.setObjectName("genesis")
 
+
+class MoveStress(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "background-color: #FFF7F0; border-radius:10;")
+        self.setObjectName("move_stress")
+
+        self.move_stress_title = QLabel("Move Stress", self)
+        self.move_stress_title.setObjectName("move_stress_title")
+        self.move_stress_title.setGeometry(QRect(30, 30, 141, 20))
+        self.move_stress_title.setFont(FONT_REG_14)
+        self.move_stress_title.setStyleSheet("color: black;")
+        self.move_stress_title.setAlignment(Qt.AlignLeft)
+
+        self.move_stress_number = QLabel("0", self)
+        self.move_stress_number.setObjectName("move_stress_number")
+        self.move_stress_number.setGeometry(QRect(30, 60, 91, 31))
+        self.move_stress_number.setFont(FONT_BOLD_24)
+        self.move_stress_number.setStyleSheet("color: black;")
+        self.move_stress_number.setAlignment(Qt.AlignLeft)
+
+        self.move_stress_rate = QLabel("0", self)
+        self.move_stress_rate.setObjectName("move_stress_rate")
+        self.move_stress_rate.setGeometry(QRect(130, 67, 41, 16))
+        self.move_stress_rate.setFont(FONT_REG_14)
+        self.move_stress_rate.setStyleSheet("color: black;")
+        self.move_stress_rate.setAlignment(Qt.AlignRight)
 
 
 if __name__ == "__main__":
