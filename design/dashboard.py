@@ -26,7 +26,8 @@ class Dashboard(QMainWindow):
         self.stackedWidget = QStackedWidget(self)
         self.stackedWidget.setGeometry(QRect(30, 30, 1381, 841))
 
-        self.doo_pond_dashboard = DooPondDashboard(self, FONT_BOLD_24, FONT_REG_14)
+        self.doo_pond_dashboard = DooPondDashboard(
+            self, FONT_BOLD_24, FONT_REG_14)
         self.stackedWidget.addWidget(self.doo_pond_dashboard)
 
         self.show()
@@ -39,6 +40,9 @@ class DooPondDashboard(QWidget):
         self.current_population = CurrentPopulation(
             self, FONT_BOLD_24, FONT_REG_14)
         self.current_population.setGeometry(QRect(0, 60, 201, 111))
+
+        self.dead_fishes = DeadFishes(self, FONT_BOLD_24, FONT_REG_14)
+        self.dead_fishes.setGeometry(QRect(230, 60, 201, 111))
 
 
 class CurrentPopulation(QFrame):
@@ -69,6 +73,37 @@ class CurrentPopulation(QFrame):
         self.curr_pop_rate.setFont(FONT_REG_14)
         self.curr_pop_rate.setStyleSheet("color: black;")
         self.curr_pop_rate.setAlignment(Qt.AlignRight)
+
+
+class DeadFishes(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "background-color: #EEF1FF; border-radius:10;")
+        self.setObjectName("dead_fishes")
+
+        self.dead_fishes_title = QLabel("Dead Fishes", self)
+        self.dead_fishes_title.setObjectName("dead_fishes_title")
+        self.dead_fishes_title.setGeometry(QRect(30, 30, 141, 20))
+        self.dead_fishes_title.setFont(FONT_REG_14)
+        self.dead_fishes_title.setStyleSheet("color: black;")
+        self.dead_fishes_title.setAlignment(Qt.AlignLeft)
+
+        self.dead_fishes_number = QLabel("0", self)
+        self.dead_fishes_number.setObjectName("dead_fishes_number")
+        self.dead_fishes_number.setGeometry(QRect(30, 60, 91, 31))
+        self.dead_fishes_number.setFont(FONT_BOLD_24)
+        self.dead_fishes_number.setStyleSheet("color: black;")
+        self.dead_fishes_number.setAlignment(Qt.AlignLeft)
+
+        self.dead_fishes_rate = QLabel("0", self)
+        self.dead_fishes_rate.setObjectName("dead_fishes_rate")
+        self.dead_fishes_rate.setGeometry(QRect(130, 67, 41, 16))
+        self.dead_fishes_rate.setFont(FONT_REG_14)
+        self.dead_fishes_rate.setStyleSheet("color: black;")
+        self.dead_fishes_rate.setAlignment(Qt.AlignRight)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
