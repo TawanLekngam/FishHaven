@@ -47,6 +47,9 @@ class DooPondDashboard(QWidget):
         self.male_fishes = MaleFishes(self, FONT_BOLD_24, FONT_REG_14)
         self.male_fishes.setGeometry(QRect(460, 60, 201, 111))
 
+        self.female_fishes = FemaleFishes(self, FONT_BOLD_24, FONT_REG_14)
+        self.female_fishes.setGeometry(QRect(690, 60, 201, 111))
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
@@ -136,7 +139,37 @@ class MaleFishes(QFrame):
         self.male_fishes_rate.setFont(FONT_REG_14)
         self.male_fishes_rate.setStyleSheet("color: black;")
         self.male_fishes_rate.setAlignment(Qt.AlignRight)
-        
+
+
+class FemaleFishes(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "background-color: #FFF7F0; border-radius:10;")
+        self.setObjectName("female_fishes")
+
+        self.female_fishes_title = QLabel("Female Fishes", self)
+        self.female_fishes_title.setObjectName("female_fishes_title")
+        self.female_fishes_title.setGeometry(QRect(30, 30, 141, 20))
+        self.female_fishes_title.setFont(FONT_REG_14)
+        self.female_fishes_title.setStyleSheet("color: black;")
+        self.female_fishes_title.setAlignment(Qt.AlignLeft)
+
+        self.female_fishes_number = QLabel("0", self)
+        self.female_fishes_number.setObjectName("female_fishes_number")
+        self.female_fishes_number.setGeometry(QRect(30, 60, 91, 31))
+        self.female_fishes_number.setFont(FONT_BOLD_24)
+        self.female_fishes_number.setStyleSheet("color: black;")
+        self.female_fishes_number.setAlignment(Qt.AlignLeft)
+
+        self.female_fishes_rate = QLabel("0", self)
+        self.female_fishes_rate.setObjectName("female_fishes_rate")
+        self.female_fishes_rate.setGeometry(QRect(130, 67, 41, 16))
+        self.female_fishes_rate.setFont(FONT_REG_14)
+        self.female_fishes_rate.setStyleSheet("color: black;")
+        self.female_fishes_rate.setAlignment(Qt.AlignRight)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
