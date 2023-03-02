@@ -74,6 +74,9 @@ class DooPondDashboard(QWidget):
         self.line.setStyleSheet("background-color:gray;")
         self.line.setFrameShape(QFrame.VLine)
 
+        self.pond_log = PondLog(self, FONT_REG_14)
+        self.pond_log.setGeometry(QRect(920, 0, 461, 841))
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
@@ -330,6 +333,39 @@ class DeathDisaster(QFrame):
         self.death_disaster_rate.setFont(FONT_REG_14)
         self.death_disaster_rate.setStyleSheet("color: black;")
         self.death_disaster_rate.setAlignment(Qt.AlignRight)
+
+
+class PondLog(QFrame):
+    def __init__(self, parent: QFrame, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "border:none;")
+        self.setObjectName("pond_log")
+
+        self.pond_log_title = QLabel("Pond Log", self)
+        self.pond_log_title.setObjectName("pond_log_title")
+        self.pond_log_title.setGeometry(QRect(0, 10, 81, 20))
+        self.pond_log_title.setFont(FONT_REG_14)
+        self.pond_log_title.setStyleSheet("color: black;")
+        self.pond_log_title.setAlignment(Qt.AlignLeft)
+
+        self.pond_log_scrollArea = QScrollArea(self)
+        self.pond_log_scrollArea.setObjectName("pond_log_scrollArea")
+        self.pond_log_scrollArea.setGeometry(QRect(0, 40, 461, 801))
+        self.pond_log_scrollArea.setStyleSheet("border:none;")
+        self.pond_log_scrollArea.setVerticalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff)
+        self.pond_log_scrollArea.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff)
+
+        self.pond_log_scrollAreaWidgetContents = QWidget()
+        self.pond_log_scrollAreaWidgetContents.setObjectName(
+            "pond_log_scrollAreaWidgetContents")
+        self.pond_log_scrollAreaWidgetContents.setGeometry(
+            QRect(0, 0, 461, 801))
+        self.pond_log_scrollArea.setWidget(
+            self.pond_log_scrollAreaWidgetContents)
 
 
 if __name__ == "__main__":
