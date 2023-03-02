@@ -69,6 +69,11 @@ class DooPondDashboard(QWidget):
         self.death_disaster = DeathDisaster(self, FONT_BOLD_24, FONT_REG_14)
         self.death_disaster.setGeometry(QRect(690, 730, 201, 111))
 
+        self.line = QFrame(self)
+        self.line.setGeometry(QRect(906, 0, 1, 852))
+        self.line.setStyleSheet("background-color:gray;")
+        self.line.setFrameShape(QFrame.VLine)
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
