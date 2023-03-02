@@ -66,6 +66,9 @@ class DooPondDashboard(QWidget):
         self.death_god = DeathGod(self, FONT_BOLD_24, FONT_REG_14)
         self.death_god.setGeometry(QRect(460, 730, 201, 111))
 
+        self.death_disaster = DeathDisaster(self, FONT_BOLD_24, FONT_REG_14)
+        self.death_disaster.setGeometry(QRect(690, 730, 201, 111))
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
@@ -234,6 +237,7 @@ class MoveStress(QFrame):
         self.move_stress_rate.setStyleSheet("color: black;")
         self.move_stress_rate.setAlignment(Qt.AlignRight)
 
+
 class MoveInstinct(QFrame):
     def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
         QFrame.__init__(self, parent)
@@ -263,6 +267,7 @@ class MoveInstinct(QFrame):
         self.move_instinct_rate.setStyleSheet("color: black;")
         self.move_instinct_rate.setAlignment(Qt.AlignRight)
 
+
 class DeathGod(QFrame):
     def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
         QFrame.__init__(self, parent)
@@ -290,6 +295,36 @@ class DeathGod(QFrame):
         self.death_god_rate.setFont(FONT_REG_14)
         self.death_god_rate.setStyleSheet("color: black;")
         self.death_god_rate.setAlignment(Qt.AlignRight)
+
+
+class DeathDisaster(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "background-color: #FFF3F1; border-radius:10;")
+        self.setObjectName("death_disaster")
+
+        self.death_disaster_title = QLabel("Death Disaster", self)
+        self.death_disaster_title.setObjectName("death_disaster_title")
+        self.death_disaster_title.setGeometry(QRect(30, 30, 141, 20))
+        self.death_disaster_title.setFont(FONT_REG_14)
+        self.death_disaster_title.setStyleSheet("color: black;")
+        self.death_disaster_title.setAlignment(Qt.AlignLeft)
+
+        self.death_disaster_number = QLabel("0", self)
+        self.death_disaster_number.setObjectName("death_disaster_number")
+        self.death_disaster_number.setGeometry(QRect(30, 60, 91, 31))
+        self.death_disaster_number.setFont(FONT_BOLD_24)
+        self.death_disaster_number.setStyleSheet("color: black;")
+        self.death_disaster_number.setAlignment(Qt.AlignLeft)
+
+        self.death_disaster_rate = QLabel("0", self)
+        self.death_disaster_rate.setObjectName("death_disaster_rate")
+        self.death_disaster_rate.setGeometry(QRect(130, 67, 41, 16))
+        self.death_disaster_rate.setFont(FONT_REG_14)
+        self.death_disaster_rate.setStyleSheet("color: black;")
+        self.death_disaster_rate.setAlignment(Qt.AlignRight)
 
 
 if __name__ == "__main__":
