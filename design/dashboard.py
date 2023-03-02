@@ -63,6 +63,9 @@ class DooPondDashboard(QWidget):
         self.move_instinct = MoveInstinct(self, FONT_BOLD_24, FONT_REG_14)
         self.move_instinct.setGeometry(QRect(690, 590, 201, 111))
 
+        self.death_god = DeathGod(self, FONT_BOLD_24, FONT_REG_14)
+        self.death_god.setGeometry(QRect(460, 730, 201, 111))
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
@@ -259,6 +262,34 @@ class MoveInstinct(QFrame):
         self.move_instinct_rate.setFont(FONT_REG_14)
         self.move_instinct_rate.setStyleSheet("color: black;")
         self.move_instinct_rate.setAlignment(Qt.AlignRight)
+
+class DeathGod(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "background-color: #F0FAFF; border-radius:10;")
+        self.setObjectName("death_god")
+
+        self.death_god_title = QLabel("Death God", self)
+        self.death_god_title.setObjectName("death_god_title")
+        self.death_god_title.setGeometry(QRect(30, 30, 141, 20))
+        self.death_god_title.setFont(FONT_REG_14)
+        self.death_god_title.setStyleSheet("color: black;")
+
+        self.death_god_number = QLabel("0", self)
+        self.death_god_number.setObjectName("death_god_number")
+        self.death_god_number.setGeometry(QRect(30, 60, 91, 31))
+        self.death_god_number.setFont(FONT_BOLD_24)
+        self.death_god_number.setStyleSheet("color: black;")
+        self.death_god_number.setAlignment(Qt.AlignLeft)
+
+        self.death_god_rate = QLabel("0", self)
+        self.death_god_rate.setObjectName("death_god_rate")
+        self.death_god_rate.setGeometry(QRect(130, 67, 41, 16))
+        self.death_god_rate.setFont(FONT_REG_14)
+        self.death_god_rate.setStyleSheet("color: black;")
+        self.death_god_rate.setAlignment(Qt.AlignRight)
 
 
 if __name__ == "__main__":
