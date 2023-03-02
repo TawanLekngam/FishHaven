@@ -50,6 +50,13 @@ class DooPondDashboard(QWidget):
         self.female_fishes = FemaleFishes(self, FONT_BOLD_24, FONT_REG_14)
         self.female_fishes.setGeometry(QRect(690, 60, 201, 111))
 
+        self.population_trend = PopulationTrend(
+            self, FONT_BOLD_24, FONT_REG_14)
+        self.population_trend.setGeometry(QRect(0, 200, 891, 361))
+
+        self.genesis = Genesis(self, FONT_BOLD_24, FONT_REG_14)
+        self.genesis.setGeometry(QRect(0, 590, 431, 251))
+
 
 class CurrentPopulation(QFrame):
     def __init__(self, parent: QFrame = None, FONT_BOLD_24=None, FONT_REG_14=None):
@@ -169,6 +176,25 @@ class FemaleFishes(QFrame):
         self.female_fishes_rate.setFont(FONT_REG_14)
         self.female_fishes_rate.setStyleSheet("color: black;")
         self.female_fishes_rate.setAlignment(Qt.AlignRight)
+
+
+class PopulationTrend(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "border:2px solid; border-color: #F7F9FB; border-radius:10;")
+        self.setObjectName("population_trend")
+
+
+class Genesis(QFrame):
+    def __init__(self, parent: QFrame, FONT_BOLD_24=None, FONT_REG_14=None) -> None:
+        QFrame.__init__(self, parent)
+
+        self.setStyleSheet(
+            "border:2px solid; border-color: #F7F9FB; border-radius:10;")
+        self.setObjectName("genesis")
+
 
 
 if __name__ == "__main__":
