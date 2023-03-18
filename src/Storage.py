@@ -1,4 +1,5 @@
 import pickle
+import sys
 import redis
 import time
 
@@ -11,7 +12,7 @@ from FishSprite import FishSprite
 log = getLogger("redis")
 
 
-def connect_to_redis(host="localhost", port=6379, password=None, retries=5, retry_interval=1, db=0) -> redis.StrictRedis | None:
+def connect_to_redis(host="localhost", port=6379, password=None, retries=3, retry_interval=1, db=0) -> redis.StrictRedis:
     for i in range(retries):
         try:
             r = redis.StrictRedis(host=host,
@@ -32,7 +33,7 @@ def connect_to_redis(host="localhost", port=6379, password=None, retries=5, retr
             else:
                 log.error(
                     f"failed to connect to Redis at {host}:{port}, after {retries} attempts")
-                return None
+                sys.exit(-1)
 
 
 class Storage:
