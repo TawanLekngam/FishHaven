@@ -4,44 +4,38 @@ from models import Fish
 
 
 class FishFactory:
-    @staticmethod
-    def generate_fish() -> Fish:
-        "returns a Fish object with random properties"
+    __instance = None
 
-        fish_id = FishFactory.__rand_id()
-        genesis = 'doo-pond'
+    def __new__(cls):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
+    def generate_fish(self, genesis: str) -> Fish:
+        id = self.__rand_id()
         gender = random.choice(['male', 'female'])
-        pheromone_threshold = FishFactory.__rand_pheromone_threshold()
-        crowd_threshold = FishFactory.__rand_crowd_threshold()
-        lifespan = FishFactory.__rand_lifespan()
+        pheromone_threshold = self.__rand_pheromone_threshold()
+        crowd_threshold = self.__rand_crowd_threshold()
+        lifespan = self.__rand_lifespan()
 
-        fish = Fish(
-            fish_id,
-            genesis,
-            gender,
-            pheromone_threshold,
-            crowd_threshold, lifespan
-        )
+        fish = Fish(id, genesis, gender, pheromone_threshold,
+                    crowd_threshold, lifespan)
         return fish
 
-    @staticmethod
-    def __rand_id() -> str:
+    def __rand_id(self) -> str:
         "returns a random 6 digit string"
         id = ""
         for _ in range(6):
             id += "0123456789"[math.floor(random.random() * 10)]
         return id
 
-    @staticmethod
-    def __rand_pheromone_threshold() -> int:
+    def __rand_pheromone_threshold(self) -> int:
         return random.randint(30, 60)
 
-    @staticmethod
-    def __rand_crowd_threshold() -> int:
+    def __rand_crowd_threshold(self) -> int:
         return random.randint(5, 20)
 
-    @staticmethod
-    def __rand_lifespan() -> int:
+    def __rand_lifespan(self) -> int:
         """
         returns a random value between 60 and 120 with 99% probability,
         and returns 0 with 1% probability.
