@@ -1,6 +1,6 @@
 import math
 import random
-from models.Fish import Fish
+from models import Fish
 
 
 class FishFactory:

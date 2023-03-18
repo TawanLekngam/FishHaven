@@ -2,8 +2,8 @@ import os
 import random
 import pygame
 
-from models.Fish import Fish
-from scripts.movement import Movement, BounceMovement, VerticalMovement
+from models import Fish
+from scripts import Movement, BounceMovement, VerticalMovement
 
 
 BASE_DIR = os.path.split(os.path.abspath(__file__))[0]
