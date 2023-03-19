@@ -20,7 +20,7 @@ class DPDashboard(QWidget):
     def __init__(self, parent: QWidget = None):
         QWidget.__init__(self, parent)
 
-        self.current_population = InfoFrame(
+        self.population = InfoFrame(
             self, '#FFF7F0', 0, 60, 'current_population')
 
         self.dead_fishes = InfoFrame(self, '#EEF1FF', 230, 60, 'dead_fishes')
@@ -53,6 +53,19 @@ class DPDashboard(QWidget):
 
         self.pond_log = PondLog(self)
         self.pond_log.setGeometry(QRect(920, 0, 461, 841))
+
+    def update(self, data: list):
+        self.population.set_number(str(len(data)))
+        male_fish_count = 0
+        female_fish_count = 0
+        for fish in data:
+            if fish.gender == "male":
+                male_fish_count += 1
+            else:
+                female_fish_count += 1
+
+        self.male_fishes.set_number(str(male_fish_count))
+        self.female_fishes.set_number(str(female_fish_count))
 
 
 class PopulationTrend(QFrame):
@@ -101,35 +114,13 @@ class PondLog(QFrame):
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         # Add more logs here
-        self.log_details1 = LogDetails(
+        self.log_details1 = LogDetail(
             self.scrollAreaWidgetContents, "Fish 0012 died")
-        self.log_details2 = LogDetails(
+        self.log_details2 = LogDetail(
             self.scrollAreaWidgetContents, "Fish 1234 moved")
 
         self.scrollAreaWidgetContents.layout().addWidget(self.log_details1)
         self.scrollAreaWidgetContents.layout().addWidget(self.log_details2)
-
-
-class LogDetails(QFrame):
-    def __init__(self, parent: QFrame, description=str) -> None:
-        QFrame.__init__(self, parent)
-        self.setFixedSize(461, 81)
-        self.setStyleSheet("border:none;")
-
-        self.image_frame = QFrame(self)
-        self.image_frame.setGeometry(QRect(10, 13, 54, 54))
-        self.image_frame.setStyleSheet("background-color:#E5ECF6;  border-radius:10;")
-
-        self.description = QLabel(description, self)
-        self.description.setGeometry(QRect(80, 20, 371, 20))
-        self.description.setFont(FONT_REG_14)
-        self.description.setStyleSheet("color: black;")
-        self.description.setAlignment(Qt.AlignLeft)
-
-        self.time = QLabel("...m ago", self)
-        self.time.setGeometry(QRect(80, 40, 371, 20))
-        self.time.setFont(FONT_REG_12)
-        self.time.setStyleSheet("color: gray;")
 
 
 class InfoFrame(QFrame):
@@ -164,10 +155,31 @@ class InfoFrame(QFrame):
         self.rate_label.setStyleSheet("color: black;")
         self.rate_label.setAlignment(Qt.AlignRight)
 
-    def update_number(self, number: str):
+    def set_number(self, number: str):
         self.number_label.setText(number)
 
-    def update_rate(self, rate: str):
+    def set_rate(self, rate: str):
         self.rate_label.setText(rate)
 
 
+class LogDetail(QFrame):
+    def __init__(self, parent: QFrame, description=str) -> None:
+        QFrame.__init__(self, parent)
+        self.setFixedSize(461, 81)
+        self.setStyleSheet("border:none;")
+
+        self.image_frame = QFrame(self)
+        self.image_frame.setGeometry(QRect(10, 13, 54, 54))
+        self.image_frame.setStyleSheet(
+            "background-color:#E5ECF6;  border-radius:10;")
+
+        self.description = QLabel(description, self)
+        self.description.setGeometry(QRect(80, 20, 371, 20))
+        self.description.setFont(FONT_REG_14)
+        self.description.setStyleSheet("color: black;")
+        self.description.setAlignment(Qt.AlignLeft)
+
+        self.time = QLabel("...m ago", self)
+        self.time.setGeometry(QRect(80, 40, 371, 20))
+        self.time.setFont(FONT_REG_12)
+        self.time.setStyleSheet("color: gray;")
