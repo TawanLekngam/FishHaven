@@ -12,13 +12,12 @@ from FishSprite import FishSprite
 log = getLogger("redis")
 
 
-def connect_to_redis(host="localhost", port=6379, password=None, retries=3, retry_interval=1, db=0) -> redis.StrictRedis:
+def connect_to_redis(host="localhost", port=6379, password=None, retries=3, retry_interval=1) -> redis.StrictRedis:
     for i in range(retries):
         try:
             r = redis.StrictRedis(host=host,
                                   port=port,
-                                  password=password,
-                                  db=db)
+                                  password=password)
             if r.ping():
                 log.info(f"connected to Redis at {host}:{port}")
                 return r
