@@ -7,8 +7,11 @@ from utils.FishFactory import FishFactory
 
 from FishSprite import FishSprite
 from Storage import Storage
-from Dashboard import DashBoard
+from components import MainDashboard
 from KeeperPanel import KeeperPanel
+
+
+fish_factory = FishFactory()
 
 
 class Pond:
@@ -18,10 +21,12 @@ class Pond:
         self.name: str = name
         self.storage: Storage = storage
 
-        self.all_sprites: pygame.sprite.Group[FishSprite] = pygame.sprite.Group()
+        self.all_sprites: pygame.sprite.Group[FishSprite] = pygame.sprite.Group(
+        )
 
-    def spawn_fish(self):
-        fish = FishFactory.generate_fish()
+    def spawn_fish(self, genesis: str = None):
+        genesis = genesis if genesis else self.name
+        fish = fish_factory.generate_fish(genesis)
         fish_sprite = FishSprite(fish)
         self.storage.add_fish(fish)
         self.all_sprites.add(fish_sprite)
@@ -33,6 +38,12 @@ class Pond:
     def load_fishes(self):
         for fish in self.storage.get_fishes().values():
             self.all_sprites.add(fish)
+
+    def get_fishes(self):
+        fishes = []
+        for fish in self.all_sprites:
+            fishes.append(fish.get_data())
+        return fishes
 
     def run(self):
         pygame.init()
@@ -47,7 +58,7 @@ class Pond:
         self.spawn_fish()
 
         app = QApplication(sys.argv)
-        dashboard = DashBoard()
+        dashboard = MainDashboard()
         keeperPanel = KeeperPanel()
 
         running = True
@@ -66,9 +77,8 @@ class Pond:
             time_since_update = pygame.time.get_ticks() - update_time
             if time_since_update >= 1000:
                 self.__tick_lifespan()
+                dashboard.update(dp_data=self.get_fishes())
                 update_time = pygame.time.get_ticks()
-
-            dashboard.update(doo_pond=len(self.all_sprites))
 
             self.all_sprites.update()
             screen.blit(background, (0, 0))
