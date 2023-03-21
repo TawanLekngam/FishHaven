@@ -56,16 +56,6 @@ class DPDashboard(QWidget):
 
     def update(self, data: list):
         self.population.set_number(str(len(data)))
-        male_fish_count = 0
-        female_fish_count = 0
-        for fish in data:
-            if fish.gender == "male":
-                male_fish_count += 1
-            else:
-                female_fish_count += 1
-
-        self.male_fishes.set_number(str(male_fish_count))
-        self.female_fishes.set_number(str(female_fish_count))
 
 
 class PopulationTrend(QFrame):

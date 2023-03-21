@@ -6,8 +6,7 @@ import time
 
 from logging import getLogger
 
-from models import Fish
-from FishSprite import FishSprite
+from models import FishData, FishSprite
 
 log = getLogger("redis")
 
@@ -39,10 +38,10 @@ class Storage:
     def __init__(self, target_redis):
         self.redis: redis.StrictRedis = target_redis
 
-    def add_fish(self, fish: Fish):
+    def add_fish(self, fish: FishData):
         self.redis.set(fish.get_id(),
                        pickle.dumps(fish),
-                       ex=fish.get_lifespan())
+                       ex=fish.get_life_span())
 
     def remove_fish(self, ids: list[str]):
         self.redis.delete(*ids)

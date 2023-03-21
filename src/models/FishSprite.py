@@ -2,27 +2,27 @@ import os
 import random
 import pygame
 
-from models import Fish
-from scripts import Movement, BounceMovement, VerticalMovement
+from .FishData import FishData
 
 
-BASE_DIR = os.path.split(os.path.abspath(__file__))[0]
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSET_DIR = os.path.join(BASE_DIR, "assets")
 
 
 class FishSprite(pygame.sprite.Sprite):
-    def __init__(self, fish: Fish, movement: Movement = BounceMovement(3)):
-        super().__init__()
-        self.fish = fish
+    sprites: dict[str, list[pygame.Surface]] = {
+        "left": [],
+        "right": []
+    }
 
-        # pygame objects
+    def __init__(self, data: FishData, movement=None):
+        super().__init__()
+        self.data = data
+
         self.direction = random.choice(["left", "right"])
         self.frame = 0
-        self.sprites: dict[str, list[pygame.Surface]] = {
-            "left": [],
-            "right": []
-        }
-        self.__load_sprite(fish.get_genesis())
+
+        self._load_sprite(data.get_genesis())
         self.image = self.sprites[self.direction][self.frame]
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, 1280 - self.rect.width)
@@ -30,7 +30,11 @@ class FishSprite(pygame.sprite.Sprite):
 
         self.movement = movement
 
-    def __load_sprite(self, genesis: str):
+        # TODO: Feed fish system
+        self.health = 100
+        self.hunger = 100
+
+    def _load_sprite(self, genesis: str):
         pond_type = "local_pond" if genesis == "doo-pond" else "foreign_pond"
         target_path = os.path.join(ASSET_DIR, pond_type)
 
@@ -45,24 +49,34 @@ class FishSprite(pygame.sprite.Sprite):
         self.frame = 0
 
     def tick_lifespan(self):
-        if self.fish.is_immortal:
+        if self.data.is_immortal:
             return
 
-        if self.fish.is_alive:
-            self.fish.lifespan -= 1
-            self.fish.time_in_pond += 1
-            if self.fish.lifespan <= 0:
-                self.fish.is_alive = False
+        if self.data.is_alive:
+            self.data.life_span -= 1
+            self.data.time_in_pond += 1
+            if self.data.life_span <= 0:
+                self.data.is_alive = False
                 self.kill()
-        # print(f"id:{self.fish.id} lifespan:{self.fish.lifespan}")
 
     def get_data(self):
-        return self.fish
+        return self.data
+    
+    def get_id(self):
+        return self.data.get_id()
+
+    def get_genesis(self):
+        return self.data.get_genesis()
 
     def update(self):
-        self.movement.move(self)
         self.frame = (self.frame + 0.1) % len(self.sprites[self.direction])
         self.image = self.sprites[self.direction][int(self.frame)]
+        if self.movement:
+            self.movement.move(self)
 
     def die(self):
         self.kill()
+
+
+if __name__ == "__main__":
+    print(ASSET_DIR)

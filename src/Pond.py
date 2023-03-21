@@ -5,10 +5,9 @@ from PySide6.QtWidgets import QApplication
 
 from utils.FishFactory import FishFactory
 
-from FishSprite import FishSprite
 from Storage import Storage
 from components import MainDashboard
-from KeeperPanel import KeeperPanel
+from models import FishSprite, FishGroup
 
 
 fish_factory = FishFactory()
@@ -21,8 +20,7 @@ class Pond:
         self.name: str = name
         self.storage: Storage = storage
 
-        self.all_sprites: pygame.sprite.Group[FishSprite] = pygame.sprite.Group(
-        )
+        self.all_sprites = FishGroup()
 
     def spawn_fish(self, genesis: str = None):
         genesis = genesis if genesis else self.name
@@ -59,7 +57,6 @@ class Pond:
 
         app = QApplication(sys.argv)
         dashboard = MainDashboard()
-        keeperPanel = KeeperPanel()
 
         running = True
         while running:
@@ -70,9 +67,6 @@ class Pond:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_d:
                         dashboard.show()
-
-                    if event.key == pygame.K_a:
-                        keeperPanel.show()
 
             time_since_update = pygame.time.get_ticks() - update_time
             if time_since_update >= 1000:
