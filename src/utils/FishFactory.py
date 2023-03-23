@@ -1,49 +1,42 @@
 import math
 import random
-from models import Fish
+from models import FishData
 
 
 class FishFactory:
-    @staticmethod
-    def generate_fish() -> Fish:
-        "returns a Fish object with random properties"
+    __instance = None
 
-        fish_id = FishFactory.__rand_id()
-        genesis = 'doo-pond'
-        gender = random.choice(['male', 'female'])
-        pheromone_threshold = FishFactory.__rand_pheromone_threshold()
-        crowd_threshold = FishFactory.__rand_crowd_threshold()
-        lifespan = FishFactory.__rand_lifespan()
+    def __new__(cls):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
 
-        fish = Fish(
-            fish_id,
-            genesis,
-            gender,
-            pheromone_threshold,
-            crowd_threshold, lifespan
-        )
+    def generate_fish(self, genesis: str, parent_id:str=None) -> FishData:
+        id = self.__rand_id()
+        pheromone_threshold = self.__rand_pheromone_threshold()
+        crowd_threshold = self.__rand_crowd_threshold()
+        life_span = self.__rand_lifespan()
+
+        fish = FishData(id, genesis, pheromone_threshold,
+                        crowd_threshold, life_span, parent_id)
         return fish
 
-    @staticmethod
-    def __rand_id() -> str:
+    def __rand_id(self) -> str:
         "returns a random 6 digit string"
         id = ""
         for _ in range(6):
             id += "0123456789"[math.floor(random.random() * 10)]
         return id
 
-    @staticmethod
-    def __rand_pheromone_threshold() -> int:
+    def __rand_pheromone_threshold(self) -> int:
         return random.randint(30, 60)
 
-    @staticmethod
-    def __rand_crowd_threshold() -> int:
+    def __rand_crowd_threshold(self) -> int:
         return random.randint(5, 20)
 
-    @staticmethod
-    def __rand_lifespan() -> int:
+    def __rand_lifespan(self) -> int:
         """
         returns a random value between 60 and 120 with 99% probability,
-        and returns 0 with 1% probability.
+        and returns 0 with 0.1% probability.
         """
-        return 0 if random.random() <= 0.01 else random.randint(60, 120)
+        return 0 if random.random() <= 0.001 else random.randint(60, 120)

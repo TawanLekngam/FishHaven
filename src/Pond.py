@@ -1,78 +1,119 @@
 import pygame
 import sys
+import random
 
 from PySide6.QtWidgets import QApplication
 
-from utils.FishFactory import FishFactory
 
-from FishSprite import FishSprite
 from Storage import Storage
-from Dashboard import DashBoard
-from KeeperPanel import KeeperPanel
+from components import MainDashboard
+from models import FishSprite, FishSchool, PondData
+
+from scripts.movement import BounceMovement
+from utils import fish_factory
 
 
 class Pond:
     __WINDOW_SIZE = (1280, 720)
 
+    __UPDATE_EVENT = pygame.USEREVENT + 1
+    __PHEROMONE_EVENT = pygame.USEREVENT + 2
+
+    __BIRTH_RATE = 0.05
+
     def __init__(self, name: str, storage: Storage):
         self.name: str = name
+        self.data: PondData = PondData(name)
         self.storage: Storage = storage
+        self.fish_school = FishSchool()
+        self.__load_fishes()
 
-        self.all_sprites: pygame.sprite.Group[FishSprite] = pygame.sprite.Group()
-
-    def spawn_fish(self):
-        fish = FishFactory.generate_fish()
-        fish_sprite = FishSprite(fish)
-        self.storage.add_fish(fish)
-        self.all_sprites.add(fish_sprite)
-
-    def __tick_lifespan(self):
-        for fish in self.all_sprites:
-            fish.tick_lifespan()
-
-    def load_fishes(self):
+    def __load_fishes(self):
+        """Load fishes from the redis storage"""
         for fish in self.storage.get_fishes().values():
-            self.all_sprites.add(fish)
+            self.fish_school.add_fish(fish)
+
+    def spawn_fish(self, genesis: str = None, parent_id: str = None):
+        """Spawn a new fish in the pond"""
+        genesis = genesis if genesis else self.name
+        fish = fish_factory.generate_fish(genesis, parent_id)
+        fish_sprite = FishSprite(fish, BounceMovement(3))
+        self.storage.add_fish(fish)
+        self.fish_school.add_fish(fish_sprite)
+
+    def remove_fish(self, fish: FishSprite):
+        self.fish_school.remove(fish)
+
+    def get_fishes(self):
+        fishes = []
+        for fish in self.fish_school:
+            fishes.append(fish.get_data())
+        return fishes
+
+    def get_population(self):
+        return self.fish_school.get_total()
+
+    def update(self):
+        self.fish_school.update_fishes(self.__update_fish)
+        self.__update_dashboard()
+
+    def __update_dashboard(self):
+        ...
+
+    def __update_fish(self, fish: FishSprite):
+        fish.update_data()
+        if not fish.is_alive():
+            self.fish_school.remove(fish)
+            self.storage.remove_fish(fish.get_id())
+            return
+
+        pheromone_value = random.randint(25, 50) * Pond.__BIRTH_RATE
+        fish.add_pheromone(pheromone_value)
+
+        if fish.is_pregnant():
+            self.spawn_fish(fish.get_genesis(), fish.get_id())
+
+        if fish.get_in_pond_time() >= 15:
+            self.remove_fish(fish)
+
+        if self.get_population() > fish.get_crowd_threshold():
+            self.remove_fish(fish)
 
     def run(self):
+        """Run the pond simulation"""
         pygame.init()
         screen = pygame.display.set_mode(Pond.__WINDOW_SIZE)
         background = pygame.image.load("./src/assets/background.jpg").convert()
         background = pygame.transform.scale(background, Pond.__WINDOW_SIZE)
         pygame.display.set_caption("Fish Haven [Doo Pond]")
         clock = pygame.time.Clock()
-        update_time = pygame.time.get_ticks()
 
-        self.load_fishes()
-        self.spawn_fish()
+        # for _ in range(100):
+        #     self.spawn_fish()
 
         app = QApplication(sys.argv)
-        dashboard = DashBoard()
-        keeperPanel = KeeperPanel()
+        dashboard = MainDashboard()
 
-        running = True
+        pygame.time.set_timer(Pond.__UPDATE_EVENT, 1000)
+        pygame.time.set_timer(Pond.__PHEROMONE_EVENT, 15000)
+
+        running = 1
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    running = 0
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_d:
                         dashboard.show()
 
-                    if event.key == pygame.K_a:
-                        keeperPanel.show()
+                if event.type == Pond.__UPDATE_EVENT:
+                    dashboard.update(dp_data=self.get_population())
+                    self.update()
 
-            time_since_update = pygame.time.get_ticks() - update_time
-            if time_since_update >= 1000:
-                self.__tick_lifespan()
-                update_time = pygame.time.get_ticks()
-
-            dashboard.update(doo_pond=len(self.all_sprites))
-
-            self.all_sprites.update()
+            self.fish_school.update()
             screen.blit(background, (0, 0))
-            self.all_sprites.draw(screen)
+            self.fish_school.draw(screen)
 
             pygame.display.flip()
             clock.tick(60)

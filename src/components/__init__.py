@@ -1,1 +1,1 @@
-from .PondWidget import PondWidget
+from .MainDashboard import MainDashboard
