@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+import logging
 
 from PySide6.QtWidgets import QApplication
 
@@ -19,19 +20,36 @@ class Pond:
     __UPDATE_EVENT = pygame.USEREVENT + 1
     __PHEROMONE_EVENT = pygame.USEREVENT + 2
 
-    __BIRTH_RATE = 0.05
+    __BIRTH_RATE = 0.005
 
     def __init__(self, name: str, storage: Storage):
         self.name: str = name
         self.data: PondData = PondData(name)
         self.storage: Storage = storage
         self.fish_school = FishSchool()
+
+        pond_log = logging.getLogger("pond")
+        pond_log.setLevel(logging.DEBUG)
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        ch.setFormatter(formatter)
+        pond_log.addHandler(ch)
+        self.log = pond_log
+
+        self.app = QApplication(sys.argv)
+        self.dashboard = MainDashboard()
+        self.dashboard.show()
         self.__load_fishes()
 
     def __load_fishes(self):
         """Load fishes from the redis storage"""
         for fish in self.storage.get_fishes().values():
             self.fish_school.add_fish(fish)
+
+        self.log.info(
+            f"loaded {len(self.fish_school)} fishes from the storage")
 
     def spawn_fish(self, genesis: str = None, parent_id: str = None):
         """Spawn a new fish in the pond"""
@@ -88,12 +106,6 @@ class Pond:
         pygame.display.set_caption("Fish Haven [Doo Pond]")
         clock = pygame.time.Clock()
 
-        # for _ in range(100):
-        #     self.spawn_fish()
-
-        app = QApplication(sys.argv)
-        dashboard = MainDashboard()
-
         pygame.time.set_timer(Pond.__UPDATE_EVENT, 1000)
         pygame.time.set_timer(Pond.__PHEROMONE_EVENT, 15000)
 
@@ -105,10 +117,10 @@ class Pond:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_d:
-                        dashboard.show()
+                        self.dashboard.show()
 
                 if event.type == Pond.__UPDATE_EVENT:
-                    dashboard.update(dp_data=self.get_population())
+                    self.dashboard.update(dp_data=self.get_population())
                     self.update()
 
             self.fish_school.update()
@@ -117,6 +129,6 @@ class Pond:
 
             pygame.display.flip()
             clock.tick(60)
-            app.processEvents()
+            self.app.processEvents()
 
         pygame.quit()

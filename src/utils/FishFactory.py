@@ -1,6 +1,9 @@
+import logging
 import math
 import random
 from models import FishData
+
+log = logging.getLogger("pond")
 
 
 class FishFactory:

@@ -1,6 +1,10 @@
+import time
 from PySide6.QtWidgets import QWidget, QFrame, QLabel, QScrollArea, QWidget, QVBoxLayout
 from PySide6.QtCore import QRect
 from PySide6.QtGui import Qt, QFont
+
+import logging
+from typing import List
 
 
 FONT_BOLD_24 = QFont('Poppins')
@@ -56,6 +60,7 @@ class DPDashboard(QWidget):
 
     def update(self, data: int):
         self.population.set_number(str(data))
+        self.pond_log.update()
 
 
 class PopulationTrend(QFrame):
@@ -89,7 +94,7 @@ class PondLog(QFrame):
         self.scrollArea = QScrollArea(self)
         self.scrollArea.setGeometry(QRect(0, 40, 461, 801))
         self.scrollArea.setStyleSheet("border:none;")
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.scrollAreaWidgetContents = QWidget()
@@ -99,18 +104,36 @@ class PondLog(QFrame):
         self.vbox.setAlignment(Qt.AlignTop)
 
         self.scrollAreaWidgetContents.setLayout(self.vbox)
-        self.scrollAreaWidgetContents.layout().setContentsMargins(0, 0, 0, 0)
+        self.scrollAreaWidgetContents.layout().setContentsMargins(0, 1, 0, 1)
         self.scrollAreaWidgetContents.layout().setSpacing(0)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        # Add more logs here
-        self.log_details1 = LogDetail(
-            self.scrollAreaWidgetContents, "Fish 0012 died")
-        self.log_details2 = LogDetail(
-            self.scrollAreaWidgetContents, "Fish 1234 moved")
+        self.log_details: List[LogDetail] = []
+        self.logger = logging.getLogger("pond")
 
-        self.scrollAreaWidgetContents.layout().addWidget(self.log_details1)
-        self.scrollAreaWidgetContents.layout().addWidget(self.log_details2)
+        handler = PondLogHandler(self)
+        handler.setLevel(logging.DEBUG)
+        self.logger.addHandler(handler)
+
+    def add_log(self, record: logging.LogRecord) -> None:
+        log_detail = LogDetail(self.scrollAreaWidgetContents, record)
+        self.log_details.append(log_detail)
+        self.scrollAreaWidgetContents.layout().addWidget(log_detail)
+        self.scrollArea.verticalScrollBar().setValue(
+            self.scrollArea.verticalScrollBar().maximum())
+
+    def update(self) -> None:
+        for log_detail in self.log_details:
+            log_detail.update()
+
+
+class PondLogHandler(logging.Handler):
+    def __init__(self, pond_log: PondLog) -> None:
+        logging.Handler.__init__(self)
+        self.pond_log = pond_log
+
+    def emit(self, record: logging.LogRecord) -> None:
+        self.pond_log.add_log(record)
 
 
 class InfoFrame(QFrame):
@@ -153,23 +176,39 @@ class InfoFrame(QFrame):
 
 
 class LogDetail(QFrame):
-    def __init__(self, parent: QFrame, description=str) -> None:
+    def __init__(self, parent: QFrame, record: logging.LogRecord):
         QFrame.__init__(self, parent)
         self.setFixedSize(461, 81)
         self.setStyleSheet("border:none;")
+        self.record = record
 
         self.image_frame = QFrame(self)
         self.image_frame.setGeometry(QRect(10, 13, 54, 54))
         self.image_frame.setStyleSheet(
             "background-color:#E5ECF6;  border-radius:10;")
 
-        self.description = QLabel(description, self)
+        self.description = QLabel(self.record.getMessage(), self)
         self.description.setGeometry(QRect(80, 20, 371, 20))
         self.description.setFont(FONT_REG_14)
         self.description.setStyleSheet("color: black;")
         self.description.setAlignment(Qt.AlignLeft)
 
-        self.time = QLabel("...m ago", self)
+        self.time = QLabel(f"{self.calculate(self.record.created)} ago", self)
         self.time.setGeometry(QRect(80, 40, 371, 20))
         self.time.setFont(FONT_REG_12)
         self.time.setStyleSheet("color: gray;")
+
+    def update(self) -> None:
+        self.time.setText(f"{self.calculate(self.record.created)} ago")
+
+    def calculate(self, created_time: float) -> str:
+        current_time = time.time()
+        time_diff = current_time - created_time
+        if time_diff < 60:
+            return f"{int(time_diff)}s"
+        elif time_diff < 3600:
+            return f"{int(time_diff // 60)}m"
+        elif time_diff < 86400:
+            return f"{int(time_diff // 3600)}h"
+        else:
+            return f"{int(time_diff // 86400)}d"
