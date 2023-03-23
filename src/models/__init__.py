@@ -1,5 +1,5 @@
 from .FishData import FishData
 from .FishSprite import FishSprite
-from .FishGroup import FishGroup
+from .FishSchool import FishSchool
 
 from .PondData import PondData

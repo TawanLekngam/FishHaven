@@ -1,5 +1,7 @@
+from __future__ import annotations
 import os
 import random
+from typing import Callable
 import pygame
 
 from .FishData import FishData
@@ -15,7 +17,7 @@ class FishSprite(pygame.sprite.Sprite):
         "right": []
     }
 
-    def __init__(self, data: FishData, movement=None):
+    def __init__(self, data: FishData, movement: Callable[[FishSprite], None]):
         super().__init__()
         self.data = data
 
@@ -65,7 +67,7 @@ class FishSprite(pygame.sprite.Sprite):
 
     def get_genesis(self):
         return self.data.get_genesis()
-    
+
     def get_in_pond_time(self):
         return self.data.time_in_pond
 
@@ -73,8 +75,7 @@ class FishSprite(pygame.sprite.Sprite):
         """Update fish sprite"""
         self.frame = (self.frame + 0.1) % len(self.sprites[self.direction])
         self.image = self.sprites[self.direction][int(self.frame)]
-        if self.movement:
-            self.movement.move(self)
+        self.movement.move(self)
 
     def update_data(self):
         """Update fish data"""
@@ -89,7 +90,7 @@ class FishSprite(pygame.sprite.Sprite):
             return False
         self.reset_pheromone()
         return True
-    
+
     def get_crowd_threshold(self):
         return self.data.get_crowd_threshold()
 
@@ -98,7 +99,6 @@ class FishSprite(pygame.sprite.Sprite):
 
     def add_pheromone(self, amount: int):
         self.data.pheromone += amount
-        print(f"Fish {self.get_id()} added {amount} pheromone")
 
     def get_pheromone_threshold(self):
         return self.data.get_pheromone_threshold()

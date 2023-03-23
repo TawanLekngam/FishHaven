@@ -34,9 +34,6 @@ class FishData:
     def get_pheromone(self):
         return self.pheromone
 
-    def get_life_span(self):
-        return self.life_span
-
     def get_state(self):
         return self.state
 
@@ -49,7 +46,7 @@ class FishData:
     def get_life_left(self):
         """Get remaining life in seconds"""
         if self.is_immortal:
-            return float("inf")
+            return None
         return self.life_span - (datetime.now() - self.birth_date).seconds
 
     def update(self):

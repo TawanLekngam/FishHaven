@@ -7,6 +7,7 @@ import time
 from logging import getLogger
 
 from models import FishData, FishSprite
+from scripts.movement import BounceMovement
 
 log = getLogger("redis")
 
@@ -39,8 +40,10 @@ class Storage:
         self.redis: redis.StrictRedis = target_redis
 
     def add_fish(self, fish: FishData):
+        """Add a fish to the redis database"""
         try:
-            self.redis.set(fish.get_id(), pickle.dumps(fish), ex=fish.get_life_span())
+            self.redis.set(fish.get_id(), pickle.dumps(
+                fish), ex=fish.get_life_left())
         except redis.exceptions.ResponseError:
             log.error("failed to add fish to redis")
 
@@ -48,10 +51,12 @@ class Storage:
         self.redis.delete(*ids)
 
     def get_fishes(self):
+        """Get all fishes from the redis database"""
         fishes_ids = self.redis.keys()
         fishes_data = [
             pickle.loads(data) for data in self.redis.mget(fishes_ids) if data is not None
         ]
 
-        fishes_sprite = [FishSprite(fish_data) for fish_data in fishes_data]
+        fishes_sprite = [FishSprite(fish_data, BounceMovement(3))
+                         for fish_data in fishes_data]
         return dict(zip(fishes_ids, fishes_sprite))
