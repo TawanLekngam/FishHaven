@@ -37,6 +37,6 @@ class FishFactory:
     def __rand_lifespan(self) -> int:
         """
         returns a random value between 60 and 120 with 99% probability,
-        and returns 0 with 1% probability.
+        and returns 0 with 0.1% probability.
         """
-        return 0 if random.random() <= 0.01 else random.randint(60, 120)
+        return 0 if random.random() <= 0.001 else random.randint(60, 120)
