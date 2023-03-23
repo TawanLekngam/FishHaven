@@ -54,8 +54,8 @@ class DPDashboard(QWidget):
         self.pond_log = PondLog(self)
         self.pond_log.setGeometry(QRect(920, 0, 461, 841))
 
-    def update(self, data: list):
-        self.population.set_number(str(len(data)))
+    def update(self, data: int):
+        self.population.set_number(str(data))
 
 
 class PopulationTrend(QFrame):

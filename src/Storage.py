@@ -39,9 +39,10 @@ class Storage:
         self.redis: redis.StrictRedis = target_redis
 
     def add_fish(self, fish: FishData):
-        self.redis.set(fish.get_id(),
-                       pickle.dumps(fish),
-                       ex=fish.get_life_span())
+        try:
+            self.redis.set(fish.get_id(), pickle.dumps(fish), ex=fish.get_life_span())
+        except redis.exceptions.ResponseError:
+            log.error("failed to add fish to redis")
 
     def remove_fish(self, ids: list[str]):
         self.redis.delete(*ids)

@@ -11,14 +11,14 @@ class FishFactory:
             cls.__instance = super().__new__(cls)
         return cls.__instance
 
-    def generate_fish(self, genesis: str) -> FishData:
+    def generate_fish(self, genesis: str, parent_id:str=None) -> FishData:
         id = self.__rand_id()
         pheromone_threshold = self.__rand_pheromone_threshold()
         crowd_threshold = self.__rand_crowd_threshold()
-        lifespan = self.__rand_lifespan()
+        life_span = self.__rand_lifespan()
 
         fish = FishData(id, genesis, pheromone_threshold,
-                        crowd_threshold, lifespan)
+                        crowd_threshold, life_span, parent_id)
         return fish
 
     def __rand_id(self) -> str:

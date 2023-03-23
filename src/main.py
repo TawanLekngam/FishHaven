@@ -1,6 +1,3 @@
-import os
-os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "true"
-
 from Storage import Storage, connect_to_redis
 from Pond import Pond
 
