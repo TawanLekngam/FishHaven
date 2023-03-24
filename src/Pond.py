@@ -39,7 +39,7 @@ class Pond:
         self.log = pond_log
 
         self.app = QApplication(sys.argv)
-        self.dashboard = MainDashboard()
+        self.dashboard = MainDashboard(self, self.fish_school)
         self.dashboard.show()
         self.__load_fishes()
 
@@ -49,7 +49,7 @@ class Pond:
             self.fish_school.add_fish(fish)
 
         self.log.info(
-            f"loaded {len(self.fish_school)} fishes from the storage")
+            f"loaded {len(self.fish_school)} fishes from the Redis storage")
 
     def spawn_fish(self, genesis: str = None, parent_id: str = None):
         """Spawn a new fish in the pond"""
@@ -58,6 +58,7 @@ class Pond:
         fish_sprite = FishSprite(fish, BounceMovement(3))
         self.storage.add_fish(fish)
         self.fish_school.add_fish(fish_sprite)
+        self.log.info(f"spawned a new fish {fish.get_id()}")
 
     def remove_fish(self, fish: FishSprite):
         self.fish_school.remove(fish)
@@ -73,10 +74,7 @@ class Pond:
 
     def update(self):
         self.fish_school.update_fishes(self.__update_fish)
-        self.__update_dashboard()
 
-    def __update_dashboard(self):
-        ...
 
     def __update_fish(self, fish: FishSprite):
         fish.update_data()
@@ -106,6 +104,9 @@ class Pond:
         pygame.display.set_caption("Fish Haven [Doo Pond]")
         clock = pygame.time.Clock()
 
+        # for _ in range(5):
+        #     self.spawn_fish()
+
         pygame.time.set_timer(Pond.__UPDATE_EVENT, 1000)
         pygame.time.set_timer(Pond.__PHEROMONE_EVENT, 15000)
 
@@ -120,8 +121,11 @@ class Pond:
                         self.dashboard.show()
 
                 if event.type == Pond.__UPDATE_EVENT:
-                    self.dashboard.update(dp_data=self.get_population())
+                    self.dashboard.update()
                     self.update()
+                
+                if event.type == Pond.__PHEROMONE_EVENT:
+                    self.log.info("Pheromone event triggered")
 
             self.fish_school.update()
             screen.blit(background, (0, 0))

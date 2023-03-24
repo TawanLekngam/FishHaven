@@ -3,8 +3,12 @@ import os
 import random
 from typing import Callable
 import pygame
+import logging
 
 from .FishData import FishData
+
+
+log = logging.getLogger("pond")
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -56,7 +60,6 @@ class FishSprite(pygame.sprite.Sprite):
 
         if not self.data.is_alive:
             self.die()
-        self.data.life_span -= 1
         self.data.time_in_pond += 1
 
     def get_data(self):
@@ -64,6 +67,18 @@ class FishSprite(pygame.sprite.Sprite):
 
     def get_id(self):
         return self.data.get_id()
+    
+    def get_state(self):
+        return self.data.get_state()
+    
+    def get_status(self):
+        if self.is_alive():
+            return "alive"
+        else:
+            return "dead"
+        
+    def get_life_left(self):
+        return self.data.get_life_left()
 
     def get_genesis(self):
         return self.data.get_genesis()
@@ -76,6 +91,11 @@ class FishSprite(pygame.sprite.Sprite):
         self.frame = (self.frame + 0.1) % len(self.sprites[self.direction])
         self.image = self.sprites[self.direction][int(self.frame)]
         self.movement.move(self)
+
+        if self.is_alive():
+            self.update_data()
+        else:
+            self.die()
 
     def update_data(self):
         """Update fish data"""
@@ -107,6 +127,7 @@ class FishSprite(pygame.sprite.Sprite):
         self.data.pheromone = 0
 
     def die(self):
+        log.info(f"Fish {self.get_id()} died")
         self.kill()
 
 

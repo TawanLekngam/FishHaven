@@ -10,9 +10,10 @@ from .DPDashboard import DPDashboard
 
 
 class MainDashboard(QMainWindow):
-    def __init__(self, ponds=None):
+    def __init__(self, ponds, fish_schools):
         super().__init__()
         self.ponds = ponds
+        self.fish_schools = fish_schools
         self.__init_ui()
 
     def __init_ui(self):
@@ -23,12 +24,11 @@ class MainDashboard(QMainWindow):
         self.stackedWidget = QStackedWidget(self)
         self.stackedWidget.setGeometry(QRect(30, 30, 1381, 841))
 
-        self.doo_pond_dashboard = DPDashboard(self)
+        self.doo_pond_dashboard = DPDashboard(self, self.fish_schools)
         self.stackedWidget.addWidget(self.doo_pond_dashboard)
-        # self.show()
 
-    def update(self, dp_data: list = None):
-        self.doo_pond_dashboard.update(dp_data)
+    def update(self):
+        self.doo_pond_dashboard.update(self.fish_schools)
 
 
 if __name__ == "__main__":

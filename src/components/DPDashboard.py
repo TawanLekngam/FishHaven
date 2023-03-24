@@ -1,10 +1,18 @@
 import time
-from PySide6.QtWidgets import QWidget, QFrame, QLabel, QScrollArea, QWidget, QVBoxLayout
-from PySide6.QtCore import QRect
-from PySide6.QtGui import Qt, QFont
+import os
+from PySide6.QtWidgets import QWidget, QFrame, QLabel, QScrollArea, QWidget, QVBoxLayout, QGridLayout
+from PySide6.QtCore import QRect, QSize
+from PySide6.QtGui import Qt, QFont, QPixmap, QImage
 
 import logging
 from typing import List
+
+from models import FishSprite, FishSchool
+
+from pygame import Surface
+
+DIR_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+ASSET_DIR = os.path.join(DIR_PATH, 'assets')
 
 
 FONT_BOLD_24 = QFont('Poppins')
@@ -21,34 +29,32 @@ FONT_REG_12.setPixelSize(12)
 class DPDashboard(QWidget):
     """Dashboard for the Doo Pond"""
 
-    def __init__(self, parent: QWidget = None):
+    def __init__(self, parent: QWidget, fish_school: FishSchool):
         QWidget.__init__(self, parent)
 
         self.population = InfoFrame(
             self, '#FFF7F0', 0, 60, 'current_population')
+        self.alive_fishes = InfoFrame(self, '#F0FAFF', 230, 60, 'alive_fishes')
 
-        self.dead_fishes = InfoFrame(self, '#EEF1FF', 230, 60, 'dead_fishes')
+        self.dead_fishes = InfoFrame(self, '#EEF1FF', 460, 60, 'dead_fishes')
 
-        self.male_fishes = InfoFrame(self, '#F0FAFF', 460, 60, 'male_fishes')
+        # self.female_fishes = InfoFrame(self, '#FFF3F1', 690, 60, 'female_fishes')
 
-        self.female_fishes = InfoFrame(
-            self, '#FFF3F1', 690, 60, 'female_fishes')
-
-        self.population_trend = PopulationTrend(self)
+        self.population_trend = PopulationTrend(self, fish_school)
         self.population_trend.setGeometry(QRect(0, 200, 891, 361))
 
-        self.genesis = Genesis(self)
-        self.genesis.setGeometry(QRect(0, 590, 431, 251))
+        # self.genesis = Genesis(self)
+        # self.genesis.setGeometry(QRect(0, 590, 431, 251))
 
-        self.move_stress = InfoFrame(self, '#FFF7F0', 460, 590, 'move_stress')
+        # self.move_stress = InfoFrame(self, '#FFF7F0', 460, 590, 'move_stress')
 
-        self.move_instinct = InfoFrame(
-            self, '#EEF1FF', 690, 590, 'move_instinct')
+        # self.move_instinct = InfoFrame(
+        #     self, '#EEF1FF', 690, 590, 'move_instinct')
 
-        self.death_god = InfoFrame(self, '#F0FAFF', 460, 730, 'death_god')
+        # self.death_god = InfoFrame(self, '#F0FAFF', 460, 730, 'death_god')
 
-        self.death_disaster = InfoFrame(
-            self, '#FFF3F1', 690, 730, 'death_disaster')
+        # self.death_disaster = InfoFrame(
+        #     self, '#FFF3F1', 690, 730, 'death_disaster')
 
         self.line = QFrame(self)
         self.line.setGeometry(QRect(906, 0, 1, 852))
@@ -58,17 +64,84 @@ class DPDashboard(QWidget):
         self.pond_log = PondLog(self)
         self.pond_log.setGeometry(QRect(920, 0, 461, 841))
 
-    def update(self, data: int):
-        self.population.set_number(str(data))
+    def update(self, fish_school: FishSchool):
+        self.population.set_number(str(fish_school.get_total()))
+        self.alive_fishes.set_number(str(fish_school.get_total_alive()))
+        self.dead_fishes.set_number(str(fish_school.get_total_dead()))
+        self.population_trend.update()
         self.pond_log.update()
 
 
 class PopulationTrend(QFrame):
-    def __init__(self, parent: QFrame) -> None:
+    def __init__(self, parent: QFrame, fish_school: FishSchool) -> None:
         QFrame.__init__(self, parent)
-
         self.setStyleSheet(
             "border:2px solid; border-color: #F7F9FB; border-radius:10;")
+
+        self.fish_school = fish_school
+        self.grid_layout = QGridLayout()
+        self.setLayout(self.grid_layout)
+
+    def update(self):
+        while self.grid_layout.count():
+            item = self.grid_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+
+        row = 5
+        col = 0
+        for fish in self.fish_school.get_fish_sprites():
+            if fish.get_state() == 'dead':
+                continue
+            fish_detail = FishDetailFrame(self, fish)
+            self.grid_layout.addWidget(fish_detail, row // 5, col)
+            col = (col + 1) % 4
+            if col == 0:
+                row += 1
+
+
+class FishDetailFrame(QFrame):
+    def __init__(self, parent: QWidget, fish: FishSprite):
+        super().__init__(parent)
+        self.setStyleSheet("border:0px solid;")
+
+        self.fish = fish
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        image = fish.image.copy()
+        self.image_label = QLabel(self)
+        self.image_label.setPixmap(self.convert_to_pixmap(image))
+
+        name = QLabel(f"ID: {fish.get_id()}", self)
+        genesis = QLabel(f"Genesis: {fish.get_genesis()}", self)
+        state = QLabel(f"State: {fish.get_state()}", self)
+        status = QLabel(f"Status: {fish.get_status()}", self)
+        if not fish.get_life_left():
+            life_left = 999
+        else:
+            life_left = fish.get_life_left() if fish.get_life_left() > 0 else 0
+        self.life_left = QLabel(f"Life: {life_left}", self)
+
+        layout.addWidget(self.image_label)
+        layout.addWidget(name)
+        layout.addWidget(genesis)
+        layout.addWidget(state)
+        layout.addWidget(status)
+        layout.addWidget(self.life_left)
+
+        self.setLayout(layout)
+
+    def convert_to_pixmap(self, surface: Surface) -> QPixmap:
+        """Converts a pygame surface to a pixmap"""
+        size = QSize(100, 100)
+        image = QImage(surface.get_buffer(), surface.get_width(),
+                       surface.get_height(), QImage.Format_RGB32)
+        pixmap = QPixmap.fromImage(image)
+        pixmap = pixmap.scaled(size, Qt.KeepAspectRatio,
+                               Qt.SmoothTransformation)
+        return pixmap
 
 
 class Genesis(QFrame):
