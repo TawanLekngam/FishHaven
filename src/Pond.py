@@ -20,13 +20,17 @@ class Pond:
     __UPDATE_EVENT = pygame.USEREVENT + 1
     __PHEROMONE_EVENT = pygame.USEREVENT + 2
 
-    __BIRTH_RATE = 0.005
+    __BIRTH_RATE = 0.5
 
     def __init__(self, name: str, storage: Storage):
         self.name: str = name
         self.data: PondData = PondData(name)
         self.storage: Storage = storage
         self.fish_school = FishSchool()
+
+        self.is_pheromone_enabled = False
+        self.is_pheromone_timer_active = False
+        self.pheromone_timer = None
 
         pond_log = logging.getLogger("pond")
         pond_log.setLevel(logging.DEBUG)
@@ -75,7 +79,6 @@ class Pond:
     def update(self):
         self.fish_school.update_fishes(self.__update_fish)
 
-
     def __update_fish(self, fish: FishSprite):
         fish.update_data()
         if not fish.is_alive():
@@ -83,8 +86,9 @@ class Pond:
             self.storage.remove_fish(fish.get_id())
             return
 
-        pheromone_value = random.randint(25, 50) * Pond.__BIRTH_RATE
-        fish.add_pheromone(pheromone_value)
+        if self.is_pheromone_enabled:
+            pheromone_value = random.randint(10, 30) * Pond.__BIRTH_RATE
+            fish.add_pheromone(pheromone_value)
 
         if fish.is_pregnant():
             self.spawn_fish(fish.get_genesis(), fish.get_id())
@@ -104,8 +108,8 @@ class Pond:
         pygame.display.set_caption("Fish Haven [Doo Pond]")
         clock = pygame.time.Clock()
 
-        # for _ in range(5):
-        #     self.spawn_fish()
+        for _ in range(3):
+            self.spawn_fish()
 
         pygame.time.set_timer(Pond.__UPDATE_EVENT, 1000)
         pygame.time.set_timer(Pond.__PHEROMONE_EVENT, 15000)
@@ -123,9 +127,20 @@ class Pond:
                 if event.type == Pond.__UPDATE_EVENT:
                     self.dashboard.update()
                     self.update()
-                
+
                 if event.type == Pond.__PHEROMONE_EVENT:
                     self.log.info("Pheromone event triggered")
+                    self.is_pheromone_enabled = True
+
+                    if not self.is_pheromone_timer_active:
+                        self.is_pheromone_timer_active = True
+                        self.pheromone_timer = pygame.time.set_timer(
+                            pygame.USEREVENT, 3000)
+
+                if event.type == pygame.USEREVENT and self.is_pheromone_timer_active:
+                    self.is_pheromone_enabled = False
+                    self.is_pheromone_timer_active = False
+                    pygame.time.set_timer(Pond.__PHEROMONE_EVENT, 15000)
 
             self.fish_school.update()
             screen.blit(background, (0, 0))

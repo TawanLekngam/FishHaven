@@ -118,6 +118,7 @@ class FishDetailFrame(QFrame):
         genesis = QLabel(f"Genesis: {fish.get_genesis()}", self)
         state = QLabel(f"State: {fish.get_state()}", self)
         status = QLabel(f"Status: {fish.get_status()}", self)
+        phromone = QLabel(f"Phromone: {fish.get_pheromone():.0f}/{fish.get_pheromone_threshold()}", self)
         if not fish.get_life_left():
             life_left = 999
         else:
@@ -130,6 +131,7 @@ class FishDetailFrame(QFrame):
         layout.addWidget(state)
         layout.addWidget(status)
         layout.addWidget(self.life_left)
+        layout.addWidget(phromone)
 
         self.setLayout(layout)
 
@@ -169,6 +171,7 @@ class PondLog(QFrame):
         self.scrollArea.setStyleSheet("border:none;")
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setWidgetResizable(True)
 
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 461, 801))
