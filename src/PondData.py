@@ -1,13 +1,11 @@
-from .FishData import FishData
+from FishData import FishData
+from typing import Dict
 
 
 class PondData:
     def __init__(self, name: str):
         self.name = name
-        self.fishes: dict[str, FishData] = {}
-
-    def __str__(self):
-        return f"{self.name} | {len(self.fishes)} fishes"
+        self.fishes: Dict[str, FishData] = {}
 
     def get_name(self):
         return self.name
@@ -26,4 +24,3 @@ class PondData:
 
     def get_fishes(self):
         return self.fishes
-    
