@@ -16,11 +16,11 @@ class PondData:
     def add_fish(self, fish: FishData):
         self.fishes[fish.get_id()] = fish
 
-    def get_fish_by_id(self, id: str):
+    def get_fish_by_id(self, id: str) -> FishData:
         return self.fishes[id]
 
     def remove_fish(self, id: str):
         self.fishes.pop(id, None)
 
-    def get_fishes(self):
+    def get_fishes(self) -> Dict[str, FishData]:
         return self.fishes

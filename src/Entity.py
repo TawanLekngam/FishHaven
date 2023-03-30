@@ -1,25 +1,29 @@
+import random
 from abc import ABC, abstractmethod
-from pygame import Surface, Rect, display
-from pygame.sprite import Sprite
-from typing import List, Dict
 from enum import Enum
+from typing import Dict, List
+
+from pygame import Rect, Surface
+from pygame.sprite import Sprite
 
 
 class Direction(str, Enum):
-    UP = 'up'
-    DOWN = 'down'
     LEFT = 'left'
     RIGHT = 'right'
 
 
 class Entity(ABC, Sprite):
-    area: Rect = display.get_surface().get_rect()
+    area: Rect
     image: Surface
     rect: Rect
     direction: Dict[Direction, List[Surface]]
 
     def __init__(self):
-        Sprite.__init__()
+        Sprite.__init__(self)
+
+    def _random_position(self):
+        self.rect.x = random.randrange(self.area.width)
+        self.rect.y = random.randrange(self.area.height)
 
     @abstractmethod
     def update(self):

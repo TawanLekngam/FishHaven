@@ -1,47 +1,40 @@
 class FishData:
     def __init__(self, id: str, genesis: str, pheromone_threshold: int, crowd_threshold: int, lifespan: int = 60, parent_id: str = None):
-        self.id = id
-        self.parent_id = parent_id
-        self.genesis = genesis
-        self.state = "in-pond"
-        self.pheromone = 0
-        self.pheromone_threshold = pheromone_threshold
-        self.crowd_threshold = crowd_threshold
-        self.age = 0
-        self.lifespan = lifespan
+        self.__id = id
+        self.__parent_id = parent_id
+        self.__genesis = genesis
+        self.__pheromone = 0
+        self.__pheromone_threshold = pheromone_threshold
+        self.__crowd_threshold = crowd_threshold
+        self.__age = 0
+        self.__lifespan = lifespan
 
     def get_id(self):
-        return self.id
+        return self.__id
 
     def get_parent_id(self):
-        return self.parent_id
+        return self.__parent_id
 
     def get_genesis(self):
-        return self.genesis
-
-    def get_state(self):
-        return self.state
+        return self.__genesis
 
     def get_pheromone(self):
-        return self.pheromone
+        return self.__pheromone
 
     def get_pheromone_threshold(self):
-        return self.pheromone_threshold
+        return self.__pheromone_threshold
 
     def get_crowd_threshold(self):
-        return self.crowd_threshold
+        return self.__crowd_threshold
 
     def get_age(self):
-        return self.age
+        return self.__age
 
     def get_lifespan(self):
-        return self.lifespan
-
-    def set_state(self, state: str):
-        self.state = state
+        return self.__lifespan
 
     def set_pheromone(self, pheromone: float):
-        self.pheromone = pheromone
+        self.__pheromone = pheromone
 
     def set_age(self, age: int):
-        self.age = age
+        self.__age = age

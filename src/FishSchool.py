@@ -11,38 +11,45 @@ class FishSchool(Group):
 
     def __init__(self):
         Group.__init__(self)
-        self.fishes: DefaultDict[str, Dict[str, FishSprite]] = defaultdict(dict)
+        self.__fishes: DefaultDict[str, Dict[str, FishSprite]] = defaultdict(dict)
 
     def add_fish(self, fish: FishSprite):
-        self.fishes[fish.get_genesis()][fish.get_id()] = fish
-        if self.get_total() < self.RENDER_LIMIT:
+        self.__fishes[fish.get_genesis()][fish.get_id()] = fish
+        if self.get_population() < self.RENDER_LIMIT:
             self.add(fish)
 
     def remove_fish(self, fish: FishSprite):
-        if fish.get_genesis() in self.fishes:
-            self.fishes[fish.get_genesis()].pop(fish.get_id(), None)
+        if fish.get_genesis() in self.__fishes:
+            self.__fishes[fish.get_genesis()].pop(fish.get_id(), None)
         self.sprites().remove(fish)
 
     def update_fishes(self, update: Callable[[FishSprite], None]):
-        for genesis in self.fishes.keys():
-            for _, fish in dict(self.fishes[genesis]).items():
+        for genesis in self.__fishes.keys():
+            for _, fish in dict(self.__fishes[genesis]).items():
                 update(fish)
 
     def update(self, *args, **kwargs):
-        Group.update(*args, **kwargs)
+        super().update(*args, **kwargs)
         if len(self.sprites()) >= self.RENDER_LIMIT:
             return
 
-        for genesis_fishes in self.fishes.values():
+        for genesis_fishes in self.__fishes.values():
             for fish in genesis_fishes.values():
                 if len(self.sprites()) < self.RENDER_LIMIT and fish not in self.sprites():
                     self.add(fish)
 
     def get_population(self):
-        return sum([len(self.fishes[k]) for k in self.fishes.keys()])
+        return sum([len(self.__fishes[k]) for k in self.__fishes.keys()])
+
+    def get_fishes(self):
+        fishes: List[FishSprite] = []
+        for genesis in self.__fishes.keys():
+            for fish in self.__fishes[genesis].values():
+                fishes.append(fish)
+        return fishes
 
     def get_fishes_by_genesis(self, genesis: str):
         fishes: List[FishSprite] = []
-        for fish in self.fishes[genesis].values():
+        for fish in self.__fishes[genesis].values():
             fishes.append(fish)
         return fishes
