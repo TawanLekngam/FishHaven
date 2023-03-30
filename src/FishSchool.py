@@ -11,7 +11,8 @@ class FishSchool(Group):
 
     def __init__(self):
         Group.__init__(self)
-        self.__fishes: DefaultDict[str, Dict[str, FishSprite]] = defaultdict(dict)
+        self.__fishes: DefaultDict[str,
+                                   Dict[str, FishSprite]] = defaultdict(dict)
 
     def add_fish(self, fish: FishSprite):
         self.__fishes[fish.get_genesis()][fish.get_id()] = fish
@@ -23,12 +24,12 @@ class FishSchool(Group):
             self.__fishes[fish.get_genesis()].pop(fish.get_id(), None)
         self.sprites().remove(fish)
 
-    def update_fishes(self, update: Callable[[FishSprite], None]):
+    def update_data(self, update: Callable[[FishSprite], None]):
         for genesis in self.__fishes.keys():
             for _, fish in dict(self.__fishes[genesis]).items():
                 update(fish)
 
-    def update(self, *args, **kwargs):
+    def update_sprite(self, *args, **kwargs):
         super().update(*args, **kwargs)
         if len(self.sprites()) >= self.RENDER_LIMIT:
             return
