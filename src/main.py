@@ -1,10 +1,12 @@
 from Pond2 import Pond
 from Storage import Storage
 
+import config
+
 
 def main():
     storage = Storage()
-    p = Pond("doo-pond", storage)
+    p = Pond(config.POND_NAME, storage)
     p.run()
 
 

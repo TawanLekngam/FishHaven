@@ -1,15 +1,13 @@
 import os.path as path
 import random
 from enum import Enum
-import config
 
 import pygame
 
+import config
 from Entity import Direction, Entity
 from FishData import FishData
 from movements import Movement
-
-ASSET_DIR = path.join(path.dirname(__file__), "assets")
 
 
 class Size(Enum):
@@ -52,7 +50,7 @@ class FishSprite(Entity):
     def _init_sprites(self):
         pond_type = "local-pond" if self.get_genesis() == config.POND_NAME else "foreign-pond"
         for i in range(1, 5):
-            image_path = path.join(ASSET_DIR, pond_type, f"{i}.png")
+            image_path = path.join(config.ASSET_DIR, pond_type, f"{i}.png")
             surface = pygame.image.load(image_path)
             surface = pygame.transform.scale(surface, (100, 100))
             self.sprites[Direction.LEFT].append(surface)
@@ -74,13 +72,13 @@ class FishSprite(Entity):
 
     def get_status(self) -> str:
         return self.__status
-    
+
     def get_time_in_pond(self) -> int:
         return self.__time_in_pond
-    
+
     def get_age(self) -> int:
         return self.__data.get_age()
-    
+
     def get_lifespan(self) -> int:
         return self.__data.get_lifespan()
 

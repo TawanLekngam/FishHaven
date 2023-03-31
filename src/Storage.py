@@ -1,13 +1,13 @@
 import pickle
 import sys
 import time
+from typing import List
 
 import redis
 
+from factories import fishFactory
 from FishSprite import FishSprite
 from Log import get_logger
-from factories import fishFactory
-from typing import List
 
 log = get_logger("redis")
 

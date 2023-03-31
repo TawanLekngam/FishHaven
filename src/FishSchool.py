@@ -1,9 +1,9 @@
+from collections import defaultdict
+from typing import Callable, DefaultDict, Dict, List
+
 from pygame.sprite import Group
 
-
 from FishSprite import FishSprite
-from typing import Callable, DefaultDict, Dict, List
-from collections import defaultdict
 
 
 class FishSchool(Group):

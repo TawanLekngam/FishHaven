@@ -1,24 +1,22 @@
 import os.path as path
+import random
 
 import pygame
-import random
 
 import config
 from factories import fishFactory
 from FishSchool import FishSchool
 from FishSprite import FishSprite
+from Log import get_logger
 from PondData import PondData
 from Storage import Storage
-from Log import get_logger
-
-ASSET_DIR = path.join(path.dirname(__file__), "assets")
 
 
 class Pond:
     UPDATE_DATA_EVENT = pygame.USEREVENT + 1
     PHEROMONE_EVENT = pygame.USEREVENT + 2
 
-    def __init__(self, name: str = "doo-pond", storage: Storage = None):
+    def __init__(self, name: str, storage: Storage = None):
         self.__name: str = name
         self.__data: PondData = PondData(name)
         self.__storage: Storage = storage
@@ -50,8 +48,6 @@ class Pond:
 
     def __update_fish(self, fish: FishSprite):
         if not fish.is_alive():
-            # self.__fish_school.remove_fish(fish)
-            # self.__data.remove_fish(fish.get_id())
             return
         fish.update_data()
 
@@ -69,7 +65,7 @@ class Pond:
         pygame.init()
         pygame.display.set_caption(f"385dc-FishHaven [{self.__name}]")
         screen = pygame.display.set_mode(config.WINDOW_SIZE)
-        background = pygame.image.load(path.join(ASSET_DIR, "background.jpg"))
+        background = pygame.image.load(path.join(config.ASSET_DIR, "background.jpg"))
         background = background.convert()
         background = pygame.transform.scale(background, config.WINDOW_SIZE)
         clock = pygame.time.Clock()

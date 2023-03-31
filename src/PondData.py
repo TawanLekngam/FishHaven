@@ -1,5 +1,6 @@
-from FishData import FishData
 from typing import Dict
+
+from FishData import FishData
 
 
 class PondData:
