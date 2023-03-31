@@ -22,8 +22,8 @@ class Entity(ABC, Sprite):
         Sprite.__init__(self)
 
     def _random_position(self):
-        self.rect.x = random.randrange(self.area.width)
-        self.rect.y = random.randrange(self.area.height)
+        self.rect.x = random.randrange(self.area.width - self.rect.width)
+        self.rect.y = random.randrange(self.area.height - self.rect.height)
 
     @abstractmethod
     def update(self):

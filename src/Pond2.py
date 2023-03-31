@@ -8,6 +8,7 @@ from factories import fishFactory
 from FishSchool import FishSchool
 from FishSprite import FishSprite
 from PondData import PondData
+from Storage import Storage
 from Log import get_logger
 
 ASSET_DIR = path.join(path.dirname(__file__), "assets")
@@ -17,15 +18,12 @@ class Pond:
     UPDATE_DATA_EVENT = pygame.USEREVENT + 1
     PHEROMONE_EVENT = pygame.USEREVENT + 2
 
-    def __init__(self, name: str = "doo-pond", storage=None):
+    def __init__(self, name: str = "doo-pond", storage: Storage = None):
         self.__name: str = name
         self.__data: PondData = PondData(name)
-        self.__storage = storage
+        self.__storage: Storage = storage
         self.__fish_school = FishSchool()
-        self.__logger = get_logger("Pond")
-
-        if self.__storage:
-            self.__load_fishes()
+        self.__logger = get_logger("pond")
 
         self.__birth_rate = 0.01
 
@@ -33,14 +31,18 @@ class Pond:
         return self.__name
 
     def __load_fishes(self):
-        # Todo: load fishes from storage
-        pass
+        fishes = self.__storage.get_fishes()
+        for fish in fishes:
+            self.__fish_school.add_fish(fish)
+        self.__logger.info(f"Loaded {len(fishes)} fishes")
 
     def spawn_fish(self, genesis: str = None, parent_id: str = None):
         genesis = genesis if genesis else self.__name
         sprite = fishFactory.generate_fish_sprite(genesis, parent_id)
         self.__fish_school.add_fish(sprite)
         self.__data.add_fish(sprite.get_data())
+        if self.__storage:
+            self.__storage.add_fish(sprite)
         self.__logger.info(f"Spawned fish {sprite.get_id()}")
 
     def remove_fish(self, fish: FishSprite):
@@ -74,6 +76,9 @@ class Pond:
 
         pygame.time.set_timer(Pond.UPDATE_DATA_EVENT, 1000)
         pygame.time.set_timer(Pond.PHEROMONE_EVENT, 15000)
+
+        if self.__storage:
+            self.__load_fishes()
 
         self.spawn_fish()
 

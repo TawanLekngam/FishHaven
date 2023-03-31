@@ -119,4 +119,3 @@ class FishSprite(Entity):
         if not self.is_alive():
             self.__status = "dead"
             self.die()
-        print(f"{self.get_age()}/{self.get_lifespan()}")
