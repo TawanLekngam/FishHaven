@@ -28,20 +28,20 @@ class FishSprite(Entity):
     def __init__(self, data: FishData, movement: Movement):
         Entity.__init__(self)
         self.__data = data
+        self.__status = "in-pond"
 
-        self.frame = 0
+        self.__frame = 0
         self.direction = random.choice([Direction.LEFT, Direction.RIGHT])
         self.sprites = {
             Direction.LEFT: [],
             Direction.RIGHT: []
         }
 
-
         self._init_sprites()
-        
-        self.time_in_pond = 0
-        self.size = Size.SMALL
-        self.movement = movement
+
+        self.__time_in_pond = 0
+        self.__size = Size.SMALL
+        self.__movement = movement
 
     def get_id(self):
         return self.__data.get_id()
@@ -56,17 +56,33 @@ class FishSprite(Entity):
             surface = pygame.image.load(image_path)
             surface = pygame.transform.scale(surface, (100, 100))
             self.sprites[Direction.LEFT].append(surface)
-            self.sprites[Direction.RIGHT].append(pygame.transform.flip(surface, True, False))
-        self.image = self.sprites[self.direction][self.frame]
+            self.sprites[Direction.RIGHT].append(
+                pygame.transform.flip(surface, True, False))
+        self.image = self.sprites[self.direction][self.__frame]
         self.rect = self.image.get_rect()
         self.area = pygame.display.get_surface().get_rect()
         self._random_position()
 
-    def get_parent_id(self):
+    def get_parent_id(self) -> str:
         return self.__data.get_parent_id()
 
-    def get_state(self):
-        return self.__data.get_state()
+    def get_data(self) -> FishData:
+        return self.__data
+
+    def get_image(self) -> pygame.Surface:
+        return self.image
+
+    def get_status(self) -> str:
+        return self.__status
+    
+    def get_time_in_pond(self) -> int:
+        return self.__time_in_pond
+    
+    def get_age(self) -> int:
+        return self.__data.get_age()
+    
+    def get_lifespan(self) -> int:
+        return self.__data.get_lifespan()
 
     def is_pregnant(self):
         if self.__data.get_pheromone() >= self.__data.get_pheromone_threshold():
@@ -78,7 +94,7 @@ class FishSprite(Entity):
         return self.__data.get_lifespan() == 0
 
     def is_alive(self):
-        return self.is_immortal() or self.__data.get_lifespan() > self.__data.get_age()
+        return self.is_immortal() or self.get_age() < self.get_lifespan()
 
     def add_pheromone(self, amount: float):
         self.__data.set_pheromone(self.__data.get_pheromone() + amount)
@@ -87,23 +103,20 @@ class FishSprite(Entity):
         self.__data.set_pheromone(0)
 
     def die(self):
-        self.get_state("dead")
         self.kill()
 
-    def get_data(self):
-        return self.__data
-
     def update(self):
-        self.__update_sprite()
-        self.movement.move(self)
+        self.update_sprite()
 
-    def __update_sprite(self):
-        self.frame = (self.frame + 0.1) % len(self.sprites[self.direction])
-        self.image = self.sprites[self.direction][int(self.frame)]
+    def update_sprite(self):
+        self.__frame = (self.__frame + 0.1) % len(self.sprites[self.direction])
+        self.image = self.sprites[self.direction][int(self.__frame)]
+        self.__movement.move(self)
 
-    def __update_time(self):
-        self.time_in_pond += 1
-        if self.is_immortal():
-            return
-
+    def update_data(self):
+        self.__time_in_pond += 1
         self.__data.set_age(self.__data.get_age() + 1)
+        if not self.is_alive():
+            self.__status = "dead"
+            self.die()
+        print(f"{self.get_age()}/{self.get_lifespan()}")

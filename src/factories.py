@@ -29,6 +29,11 @@ class FishFactory:
         fish_sprite = FishSprite(
             self.generate_fish_data(genesis, parent_id), movement)
         return fish_sprite
+    
+    def generate_fish_by_data(self, fish_data: FishData) -> FishSprite:
+        movement = self.__rand_movement()
+        fish_sprite = FishSprite(fish_data, movement)
+        return fish_sprite
 
     def __rand_id(self) -> str:
         id = ""
@@ -43,7 +48,7 @@ class FishFactory:
         return random.randint(5, 20)
 
     def __rand_lifespan(self):
-        return 0 if random.random() <= 0.001 else random.randint(60, 120)
+        return 0 if random.random() <= 0.001 else random.randint(5, 10)
 
     def __rand_movement(self):
         speed = random.randint(1, 5)

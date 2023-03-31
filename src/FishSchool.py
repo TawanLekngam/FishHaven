@@ -36,7 +36,7 @@ class FishSchool(Group):
 
         for genesis_fishes in self.__fishes.values():
             for fish in genesis_fishes.values():
-                if len(self.sprites()) < self.RENDER_LIMIT and fish not in self.sprites():
+                if len(self.sprites()) < self.RENDER_LIMIT and fish not in self.sprites() and fish.is_alive():
                     self.add(fish)
 
     def get_population(self):

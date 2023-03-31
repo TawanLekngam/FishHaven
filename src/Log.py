@@ -8,7 +8,7 @@ class CustomFormatter(Formatter):
     YELLOW = "\x1b[33;20m"
     RED = "\x1b[31;20m"
     RESET = "\x1b[0m"
-    FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
+    FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
     def __init__(self, fmt=FORMAT, datefmt="%H:%M:%S"):
         super().__init__(fmt, datefmt)
@@ -17,7 +17,6 @@ class CustomFormatter(Formatter):
         log_fmt = self.GREY + self.FORMAT + self.RESET
         if record.levelno == DEBUG:
             log_fmt = self.BLUE + self.FORMAT + self.RESET
-
         elif record.levelno == WARNING:
             log_fmt = self.YELLOW + self.FORMAT + self.RESET
         elif record.levelno in (ERROR, CRITICAL):
@@ -38,12 +37,3 @@ def get_logger(name: str = None) -> Logger:
     ch.setFormatter(CustomFormatter())
     logger.addHandler(ch)
     return logger
-
-
-if __name__ == "__main__":
-    log = get_logger()
-    log.debug("debug")
-    log.info("info")
-    log.warning("warning")
-    log.error("error")
-    log.critical("critical")
