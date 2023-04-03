@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Callable, DefaultDict, Dict, List
+from typing import Callable, Dict, List
 
 from pygame.sprite import Group
 
@@ -11,8 +11,7 @@ class FishSchool(Group):
 
     def __init__(self):
         Group.__init__(self)
-        self.__fishes: DefaultDict[str,
-                                   Dict[str, FishSprite]] = defaultdict(dict)
+        self.__fishes: Dict[str, Dict[str, FishSprite]] = defaultdict(dict)
 
     def add_fish(self, fish: FishSprite):
         self.__fishes[fish.get_genesis()][fish.get_id()] = fish

@@ -1,5 +1,6 @@
-from logging import (CRITICAL, DEBUG, ERROR, INFO, WARNING, Formatter, Logger,
-                     LogRecord, StreamHandler, getLogger)
+from logging import (CRITICAL, DEBUG, ERROR, INFO, WARNING, Formatter, Handler,
+                     Logger, LogRecord, StreamHandler, getLogger)
+
 
 
 class CustomFormatter(Formatter):

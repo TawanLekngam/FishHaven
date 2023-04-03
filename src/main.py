@@ -1,4 +1,4 @@
-from Pond2 import Pond
+from Pond import Pond
 from Storage import Storage
 
 import config
