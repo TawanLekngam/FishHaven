@@ -21,7 +21,9 @@ class FishSchool(Group):
     def remove_fish(self, fish: FishSprite):
         if fish.get_genesis() in self.__fishes:
             self.__fishes[fish.get_genesis()].pop(fish.get_id(), None)
-        self.sprites().remove(fish)
+
+        if fish in self.sprites():
+            self.sprites().remove(fish)
 
     def update_data(self, update: Callable[[FishSprite], None]):
         for genesis in self.__fishes.keys():
@@ -38,7 +40,9 @@ class FishSchool(Group):
                 if len(self.sprites()) < self.RENDER_LIMIT and fish not in self.sprites() and fish.is_alive():
                     self.add(fish)
 
-    def get_population(self):
+    def get_population(self, genesis: str = None):
+        if genesis:
+            return len(self.__fishes[genesis])
         return sum([len(self.__fishes[k]) for k in self.__fishes.keys()])
 
     def get_fishes(self):
@@ -47,6 +51,9 @@ class FishSchool(Group):
             for fish in self.__fishes[genesis].values():
                 fishes.append(fish)
         return fishes
+    
+    def get_genesis(self):
+        return list(self.__fishes.keys())
 
     def get_fishes_by_genesis(self, genesis: str):
         fishes: List[FishSprite] = []

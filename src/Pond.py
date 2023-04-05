@@ -51,7 +51,7 @@ class Pond:
 
     def __update_fish(self, fish: FishSprite):
         if not fish.is_alive():
-            return
+            self.__fish_school.remove_fish(fish)
         fish.update_data()
 
         pheromone_value = random.randint(25, 50) * self.__birth_rate
@@ -95,16 +95,18 @@ class Pond:
 
                 if event.type == Pond.UPDATE_DATA_EVENT:
                     self.__fish_school.update_data(self.__update_fish)
-                    self.__logger.info(
-                        f"Fish count: {self.__fish_school.get_population()}")
 
                 if event.type == Pond.PHEROMONE_EVENT:
                     # Todo: update pheromone
+                    self.__logger.info("Injecting pheromone")
                     pass
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_d:
                         dashboard.show()
+
+                    if event.key == pygame.K_a:
+                        self.spawn_fish()
 
             self.__fish_school.update_sprite()
             screen.blit(background, (0, 0))
@@ -112,6 +114,7 @@ class Pond:
             pygame.display.flip()
 
         pygame.quit()
+        sys.exit(0)
 
 
 if __name__ == "__main__":

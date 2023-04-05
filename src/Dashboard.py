@@ -1,35 +1,37 @@
 import sys
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-                               QVBoxLayout, QWidget, QScrollArea)
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
+                               QMainWindow, QScrollArea, QVBoxLayout, QWidget)
 
 from config import WINDOW_SIZE
-from LogDetail import LogDetail
 from FishSchool import FishSchool
+from GenesisBarWidget import GenesisBarWidget
+from InfoWidget import InfoWidget
+from LogDetailWidget import LogDetailWidget
+from style import get_font
 
 
 class Dashboard(QMainWindow):
     def __init__(self, fish_school: FishSchool = None):
         super().__init__()
-        self.fish_school = fish_school
+        self.__fish_school = fish_school
 
-        # Create main frame widget
+        FONT_BOLD_24 = get_font("Poppins", 22, bold=True)
+
         main_widget = QWidget(self)
-        main_layout = QVBoxLayout(main_widget)
-        main_layout.addWidget(
-            QLabel("Main Frame", alignment=Qt.AlignmentFlag.AlignCenter))
         main_widget.setStyleSheet("border: 1px solid black;")
+        main_layout = QVBoxLayout(main_widget)
 
-        # Create side frame widget
+        genesis_bar = GenesisBarWidget(self, self.__fish_school)
+        main_layout.addWidget(genesis_bar, alignment=Qt.AlignmentFlag.AlignTop)
+    
         side_widget = QWidget(self)
         side_layout = QVBoxLayout(side_widget)
 
         log_label = QLabel("Log")
-        log_label.setFont(QFont("Arial", 16))
-        log_label.setStyleSheet(
-            "background-color: #E5ECF6; border: 1px solid black;")
+        log_label.setFont(FONT_BOLD_24)
+        log_label.setStyleSheet("background-color: #E5ECF6; border: 1px solid black;")
         side_layout.addWidget(log_label, alignment=Qt.AlignmentFlag.AlignTop)
 
         log_scroll_area = QScrollArea(self)
@@ -49,7 +51,6 @@ class Dashboard(QMainWindow):
 
         window_width = self.geometry().width()
         side_widget.setMaximumWidth(window_width * 0.5)
-
         side_widget.setStyleSheet("border: 1px solid black;")
 
         layout = QHBoxLayout()
@@ -60,18 +61,15 @@ class Dashboard(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
+        timer = QTimer(self)
+        timer.timeout.connect(self.__update)
+        timer.start(1000)
+
         self.setWindowTitle("Dashboard")
         self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
-    def add_log(self, log: LogDetail):
+    def add_log(self, log: LogDetailWidget):
         self.logs_container.layout().addWidget(log)
 
-
-
-
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    dashboard = Dashboard()
-    sys.exit(app.exec())
+    def __update(self):
+        pass

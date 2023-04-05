@@ -1,27 +1,43 @@
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
-from PySide6.QtGui import QFont
 from logging import LogRecord
 from time import time
+import os.path as path
+
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QPixmap, QImage
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+
+from style import get_font
+
+from config import ASSET_DIR
 
 
-class LogDetail(QWidget):
-    def __init__(self, record: LogRecord):
+ICON_DIR = path.join(ASSET_DIR, "log-icon")
+
+
+class LogDetailWidget(QWidget):
+    def __init__(self, record: LogRecord, icon: str = None):
         super().__init__()
+
+        FONT_BOLD_14 = get_font("Poppins", 14, bold=True)
+        FONT_REG_12 = get_font("Poppins", 12)
         self.record = record
 
         self.image_label = QLabel(self)
         self.image_label.setFixedSize(54, 54)
-        self.image_label.setStyleSheet(
-            "background-color:#E5ECF6; border-radius: 10px")
+        self.image_label.setStyleSheet("background-color:#E5ECF6; border-radius: 10px")
+
+        if icon:
+            image = QImage(path.join(ICON_DIR, f"{icon}.png"))
+            pixmap = QPixmap.fromImage(image).scaled(50, 50)
+            self.image_label.setPixmap(pixmap)
 
         self.description_label = QLabel(self.record.getMessage(), self)
-        self.description_label.setFont(QFont("Arial", 14))
-        self.description_label.setAlignment(Qt.AlignLeft)
+        self.description_label.setFont(FONT_BOLD_14)
+        self.description_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
 
         self.time_label = QLabel(self.calculate_time(), self)
-        self.time_label.setFont(QFont("Arial", 12))
-        self.time_label.setAlignment(Qt.AlignLeft)
+        self.time_label.setFont(FONT_REG_12)
+        self.time_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.time_label.setStyleSheet("color: gray;")
 
         self.timer = QTimer(self)
