@@ -6,14 +6,14 @@ import pygame
 from PySide6.QtWidgets import QApplication
 
 import config
+from Dashboard import Dashboard
 from factories import fishFactory
 from FishSchool import FishSchool
 from FishSprite import FishSprite
 from Log import get_logger
+from LogHandler import LogHandler
 from PondData import PondData
 from Storage import Storage
-from Dashboard import Dashboard
-from LogHandler import LogHandler
 
 
 class Pond:

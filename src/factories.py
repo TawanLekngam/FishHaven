@@ -1,8 +1,10 @@
 import math
 import random
+from logging import LogRecord
 
 from FishData import FishData
 from FishSprite import FishSprite
+from LogDetailWidget import LogDetailWidget
 from movements import BounceMovement
 
 
@@ -29,7 +31,7 @@ class FishFactory:
         fish_sprite = FishSprite(
             self.generate_fish_data(genesis, parent_id), movement)
         return fish_sprite
-    
+
     def generate_fish_by_data(self, fish_data: FishData) -> FishSprite:
         movement = self.__rand_movement()
         fish_sprite = FishSprite(fish_data, movement)
@@ -56,4 +58,18 @@ class FishFactory:
         return movement(speed)
 
 
+class LogFactory:
+    __instance = None
+
+    def __new__(cls):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
+    def generate_log_widget(self, record: LogRecord) -> LogDetailWidget:
+        widget = LogDetailWidget(record)
+        return widget
+
+
 fishFactory = FishFactory()
+logFactory = LogFactory()

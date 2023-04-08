@@ -9,8 +9,8 @@ class GenesisBarWidget(QWidget):
         self.__fish_school = fish_scool
         
         main_layout = QHBoxLayout(self)
-        self.fish_count = InfoWidget(self, "All Fish", 0)
-        main_layout.addWidget(self.fish_count, alignment=Qt.AlignmentFlag.AlignLeft)
+        # self.fish_count = InfoWidget(self, "All Fish", 0)
+        # main_layout.addWidget(self.fish_count, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.genesis_scroll_area = QScrollArea(self)
         self.genesis_scroll_area.setWidgetResizable(True)

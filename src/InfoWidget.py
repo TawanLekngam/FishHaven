@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget, QFrame)
+from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
+
 from style import get_font
 
 
@@ -30,13 +30,13 @@ class InfoWidget(QWidget):
         self.setObjectName("InfoWidget")
         self.setFixedSize(200, 80)
 
-
     def set_count(self, count: int | str):
         self.count_label.setText(f"{count}")
 
 
 if __name__ == "__main__":
     import sys
+
     from PySide6.QtWidgets import QApplication
 
     app = QApplication(sys.argv)

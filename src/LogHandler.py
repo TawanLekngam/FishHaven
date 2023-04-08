@@ -1,6 +1,7 @@
 from logging import Handler, LogRecord
+
 from Dashboard import Dashboard
-from LogDetailWidget import LogDetailWidget
+from factories import logFactory
 
 
 class LogHandler(Handler):
@@ -9,8 +10,5 @@ class LogHandler(Handler):
         self.dashboard = dashboard
 
     def emit(self, record: LogRecord):
-        if record.name == "pond":
-            log = LogDetailWidget(record, "fish")
-        else:
-            log = LogDetailWidget(record)
-        self.dashboard.add_log(log)
+        widget = logFactory.generate_log_widget(record)
+        self.dashboard.add_log(widget)

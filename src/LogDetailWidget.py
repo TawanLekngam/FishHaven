@@ -1,15 +1,13 @@
+import os.path as path
 from logging import LogRecord
 from time import time
-import os.path as path
 
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QPixmap, QImage
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
-
-from style import get_font
+from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from config import ASSET_DIR
-
+from style import get_font
 
 ICON_DIR = path.join(ASSET_DIR, "log-icon")
 
@@ -17,26 +15,35 @@ ICON_DIR = path.join(ASSET_DIR, "log-icon")
 class LogDetailWidget(QWidget):
     def __init__(self, record: LogRecord, icon: str = None):
         super().__init__()
+        self.record = record
 
         FONT_BOLD_14 = get_font("Poppins", 14, bold=True)
         FONT_REG_12 = get_font("Poppins", 12)
-        self.record = record
 
-        self.image_label = QLabel(self)
+        frame = QFrame(self)
+        frame.setFrameShape(QFrame.Panel)
+        frame.setFrameShadow(QFrame.Sunken)
+        frame.setFixedHeight(80)
+        frame.setStyleSheet("background-color: #E5ECF6; border-radius: 10px;")
+
+        self.image_label = QLabel(frame)
         self.image_label.setFixedSize(54, 54)
-        self.image_label.setStyleSheet("background-color:#E5ECF6; border-radius: 10px")
+        self.image_label.setStyleSheet("background-color: transparent;")
 
         if icon:
             image = QImage(path.join(ICON_DIR, f"{icon}.png"))
             pixmap = QPixmap.fromImage(image).scaled(50, 50)
             self.image_label.setPixmap(pixmap)
 
-        self.description_label = QLabel(self.record.getMessage(), self)
+        self.description_label = QLabel(frame)
         self.description_label.setFont(FONT_BOLD_14)
+        self.description_label.setText(record.msg)
+        self.description_label.setStyleSheet("color: black;")
         self.description_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
 
-        self.time_label = QLabel(self.calculate_time(), self)
+        self.time_label = QLabel(frame)
         self.time_label.setFont(FONT_REG_12)
+        self.time_label.setText(self.calculate_time())
         self.time_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.time_label.setStyleSheet("color: gray;")
 
@@ -44,7 +51,7 @@ class LogDetailWidget(QWidget):
         self.timer.timeout.connect(self.__update)
         self.timer.start(1000)
 
-        layout = QHBoxLayout(self)
+        layout = QHBoxLayout(frame)
         layout.addWidget(self.image_label)
         layout.addSpacing(10)
 
@@ -56,7 +63,8 @@ class LogDetailWidget(QWidget):
         layout.setContentsMargins(10, 10, 10, 10)
         layout.setSpacing(10)
 
-        self.setFixedHeight(80)
+        self.layout = QVBoxLayout(self)
+        self.layout.addWidget(frame)
 
     def __update(self):
         time_diff = self.calculate_time()
@@ -68,7 +76,6 @@ class LogDetailWidget(QWidget):
         time_diff = current_time - created_time
         if time_diff < 60:
             return f"{int(time_diff)}s ago"
-
         elif time_diff < 3600:
             return f"{int(time_diff // 60)}m ago"
         elif time_diff < 86400:

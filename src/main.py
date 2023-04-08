@@ -1,7 +1,6 @@
+import config
 from Pond import Pond
 from Storage import Storage
-
-import config
 
 
 def main():
