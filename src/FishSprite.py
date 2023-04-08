@@ -52,6 +52,7 @@ class FishSprite(Entity):
         for i in range(1, 5):
             image_path = path.join(config.ASSET_DIR, pond_type, f"{i}.png")
             surface = pygame.image.load(image_path)
+            surface = surface.convert_alpha()
             surface = pygame.transform.scale(surface, (100, 100))
             self.sprites[Direction.LEFT].append(surface)
             self.sprites[Direction.RIGHT].append(
@@ -78,6 +79,12 @@ class FishSprite(Entity):
 
     def get_age(self) -> int:
         return self.__data.get_age()
+    
+    def get_pheromone(self) -> int:
+        return int(self.__data.get_pheromone())
+    
+    def get_pheromone_threshold(self) -> int:
+        return self.__data.get_pheromone_threshold()
 
     def get_lifespan(self) -> int:
         return self.__data.get_lifespan()

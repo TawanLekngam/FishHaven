@@ -10,6 +10,7 @@ from GenesisBarWidget import GenesisBarWidget
 from InfoWidget import InfoWidget
 from LogDetailWidget import LogDetailWidget
 from style import get_font
+from FishSchoolWidget import FishSchoolWidget
 
 
 class Dashboard(QMainWindow):
@@ -25,6 +26,9 @@ class Dashboard(QMainWindow):
 
         genesis_bar = GenesisBarWidget(self, self.__fish_school)
         main_layout.addWidget(genesis_bar, alignment=Qt.AlignmentFlag.AlignTop)
+
+        fish_school_widget = FishSchoolWidget(self, self.__fish_school)
+        main_layout.addWidget(fish_school_widget, alignment=Qt.AlignmentFlag.AlignTop)
     
         side_widget = QWidget(self)
         side_layout = QVBoxLayout(side_widget)

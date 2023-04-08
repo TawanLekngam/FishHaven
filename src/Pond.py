@@ -84,8 +84,6 @@ class Pond:
         if self.__storage:
             self.__load_fishes()
 
-        self.spawn_fish()
-
         running = 1
         while running:
             clock.tick(60)
