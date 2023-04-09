@@ -39,12 +39,12 @@ class Pond:
 
     def spawn_fish(self, genesis: str = None, parent_id: str = None):
         genesis = genesis if genesis else self.__name
-        sprite = fishFactory.generate_fish_sprite(genesis, parent_id)
-        self.__fish_school.add_fish(sprite)
-        self.__data.add_fish(sprite.get_data())
+        fish = fishFactory.generate_fish_sprite(genesis, parent_id)
+        self.__fish_school.add_fish(fish)
+        self.__data.add_fish(fish.get_data())
         if self.__storage:
-            self.__storage.add_fish(sprite)
-        self.__logger.info(f"Spawned fish {sprite.get_id()}")
+            self.__storage.add_fish(fish)
+        self.__logger.info(f"Spawned fish {fish.get_id()}")
 
     def remove_fish(self, fish: FishSprite):
         self.__fish_school.remove_fish(fish)
@@ -68,8 +68,8 @@ class Pond:
         pygame.init()
         pygame.display.set_caption(f"385dc-FishHaven [{self.__name}]")
         screen = pygame.display.set_mode(config.WINDOW_SIZE)
-        background = pygame.image.load(
-            path.join(config.ASSET_DIR, "background.jpg"))
+        background_path = path.join(config.ASSET_DIR, "background.jpg")
+        background = pygame.image.load(background_path)
         background = background.convert()
         background = pygame.transform.scale(background, config.WINDOW_SIZE)
         clock = pygame.time.Clock()
@@ -103,18 +103,23 @@ class Pond:
                     if event.key == pygame.K_d:
                         dashboard.show()
 
-                    if event.key == pygame.K_a:
-                        self.spawn_fish()
+                    if config.DEBUG_MODE:
+                        if event.key == pygame.K_a:
+                            self.spawn_fish()
+
+                        if event.key == pygame.K_s:
+                            self.spawn_fish("test")
 
             self.__fish_school.update_sprite()
             screen.blit(background, (0, 0))
             self.__fish_school.draw(screen)
             pygame.display.flip()
+            app.processEvents()
 
         pygame.quit()
         sys.exit(0)
 
 
 if __name__ == "__main__":
-    pond = Pond("doo-pond")
+    pond = Pond(config.POND_NAME)
     pond.run()
