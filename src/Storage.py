@@ -16,19 +16,18 @@ class Storage:
     RETRIES = 3
     RETRIES_INTERVAL = 1
 
-    def __init__(self, host="localhost", port=6379, password: str = None):
+    def __init__(self, host="localhost", port=6379, password: str = None, db: int = 0):
         self.host = host
         self.port = port
         self.password = password
-        self.redis: redis.StrictRedis = Storage.connect_to_redis(
-            host, port, password)
+        self.redis: redis.StrictRedis = Storage.connect_to_redis(host, port, password, db)
 
     @staticmethod
-    def connect_to_redis(host, port, password=None) -> redis.StrictRedis:
+    def connect_to_redis(host, port, password: str = None, db: int = 0) -> redis.StrictRedis:
         for i in range(Storage.RETRIES):
             try:
                 target = redis.StrictRedis(
-                    host=host, port=port, password=password)
+                    host=host, port=port, password=password, db=db)
                 if target.ping():
                     log.info(f"Connected to Redis at {host}:{port}")
                     return target

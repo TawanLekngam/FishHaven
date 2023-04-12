@@ -1,10 +1,12 @@
 import sys
+
+from PySide6.QtCharts import QChart, QChartView, QPieSeries
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QPainter, QPen
-from PySide6.QtWidgets import QMainWindow, QApplication ,QWidget, QVBoxLayout
-from PySide6.QtCharts import QChart, QChartView, QPieSeries
+from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
 
 from FishSchool import FishSchool
+
 
 class PieChartWidget(QWidget):
 
@@ -15,16 +17,6 @@ class PieChartWidget(QWidget):
         self.series = QPieSeries()
         for key, value in self.__fishes.get_items():
             self.series.append(key, len(value))
-
-
-        print(self.series.count())
-
-        # self.slice1 = self.series.slices()[0]
-        # self.slice1.setLabelVisible()
-        # self.slice1.setPen(QPen(Qt.darkGreen, 2))
-        # self.slice1.setBrush(Qt.green)
-
-        
 
         self.chart = QChart()
         self.chart.addSeries(self.series)

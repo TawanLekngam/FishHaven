@@ -19,6 +19,7 @@ from Storage import Storage
 class Pond:
     UPDATE_DATA_EVENT = pygame.USEREVENT + 1
     PHEROMONE_EVENT = pygame.USEREVENT + 2
+    PHEROMONE_ACTIVE_EVENT = pygame.USEREVENT + 3
 
     def __init__(self, name: str, storage: Storage = None):
         self.__name: str = name
@@ -26,13 +27,18 @@ class Pond:
         self.__storage: Storage = storage
         self.__fish_school = FishSchool()
         self.__logger = get_logger("pond")
-        self.__birth_rate = 0.01
+        self.__birth_rate = 0.15
+
+        self.__pheromone_active = False
+        self.__pheromone_timer_active = False
 
     def get_name(self):
         return self.__name
 
     def __load_fishes(self):
         fishes = self.__storage.get_fishes()
+        if len(fishes) == 0:
+            return
         for fish in fishes:
             self.__fish_school.add_fish(fish)
         self.__logger.info(f"Loaded {len(fishes)} fishes")
@@ -54,8 +60,9 @@ class Pond:
             self.__fish_school.remove_fish(fish)
         fish.update_data()
 
-        pheromone_value = random.randint(25, 50) * self.__birth_rate
-        fish.add_pheromone(pheromone_value)
+        if self.__pheromone_active:
+            pheromone_value = random.randint(25, 50) * self.__birth_rate
+            fish.add_pheromone(pheromone_value)
 
         if fish.is_pregnant():
             self.spawn_fish(fish.get_genesis(), fish.get_id())
@@ -63,6 +70,9 @@ class Pond:
         if fish.get_time_in_pond() >= 15:
             # Todo: migrate fish
             ...
+
+    def shutdown(self):
+        self.__logger.info("Shutting down")
 
     def run(self):
         pygame.init()
@@ -95,9 +105,18 @@ class Pond:
                     self.__fish_school.update_data(self.__update_fish)
 
                 if event.type == Pond.PHEROMONE_EVENT:
-                    # Todo: update pheromone
                     self.__logger.info("Injecting pheromone")
-                    pass
+                    self.__pheromone_active = True
+
+                    if not self.__pheromone_timer_active:
+                        self.__pheromone_timer_active = True
+                        pygame.time.set_timer(Pond.PHEROMONE_ACTIVE_EVENT, 3000)
+
+                if event.type == Pond.PHEROMONE_ACTIVE_EVENT and self.__pheromone_active:
+                    self.__logger.info("Pheromone expired")
+                    self.__pheromone_active = False
+                    self.__pheromone_timer_active = False
+                    pygame.time.set_timer(Pond.PHEROMONE_EVENT, 15000)
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_d:
@@ -117,6 +136,7 @@ class Pond:
             app.processEvents()
 
         pygame.quit()
+        self.shutdown()
         sys.exit(0)
 
 

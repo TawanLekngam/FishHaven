@@ -11,5 +11,16 @@ REDIS_PORT = 6379
 REDIS_PASSWORD = None
 REDIS_DB = 0
 
+
+# other pond
+OTHER_POND = {
+    "matrix-pond": {
+        "host": "localhost",
+        "port": 6379,
+        "password": None,
+        "db": 0
+    },
+}
+
 # debug
 DEBUG_MODE = True
