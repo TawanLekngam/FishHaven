@@ -5,6 +5,7 @@ from typing import List
 
 import redis
 
+import config
 from factories import fishFactory
 from FishSprite import FishSprite
 from Log import get_logger
@@ -14,35 +15,39 @@ log = get_logger("redis")
 
 class Storage:
     RETRIES = 3
-    RETRIES_INTERVAL = 1
+    INITIAL_INTERVAL = 1
+    BACKOFF_FACTOR = 2
 
     def __init__(self, host="localhost", port=6379, password: str = None, db: int = 0):
         self.host = host
         self.port = port
         self.password = password
-        self.redis: redis.StrictRedis = Storage.connect_to_redis(host, port, password, db)
+        self.redis: redis.StrictRedis = None
+        interval = Storage.INITIAL_INTERVAL
 
-    @staticmethod
-    def connect_to_redis(host, port, password: str = None, db: int = 0) -> redis.StrictRedis:
         for i in range(Storage.RETRIES):
             try:
-                target = redis.StrictRedis(
+                self.redis = redis.StrictRedis(
                     host=host, port=port, password=password, db=db)
-                if target.ping():
+                if self.redis.ping():
                     log.info(f"Connected to Redis at {host}:{port}")
-                    return target
+                    break
                 else:
                     raise redis.ConnectionError()
 
             except redis.ConnectionError:
                 if i < Storage.RETRIES - 1:
                     log.warning(
-                        f"Failed to connect to Redis at {host}:{port}, retrying in {Storage.RETRIES_INTERVAL} second")
-                    time.sleep(Storage.RETRIES_INTERVAL)
+                        f"Failed to connect to Redis at {host}:{port}, retrying in {interval} seconds")
+                    time.sleep(interval)
+                    interval *= Storage.BACKOFF_FACTOR
                 else:
                     log.error(
                         f"Failed to connect to Redis at {host}:{port}, after {Storage.RETRIES} attempts")
                     sys.exit(-1)
+
+        self.pubsub = self.redis.pubsub(ignore_subscribe_messages=True)
+        self.pubsub.subscribe(config.POND_NAME, *config.OTHER_CHANNEL)
 
     def add_fish(self, fish: FishSprite):
         id = fish.get_id()
