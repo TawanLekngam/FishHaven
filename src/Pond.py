@@ -105,7 +105,7 @@ class Pond:
                     self.__fish_school.update_data(self.__update_fish)
 
                 if event.type == Pond.PHEROMONE_EVENT:
-                    self.__logger.info("Injecting pheromone")
+                    self.__logger.info("Pheromon activated")
                     self.__pheromone_active = True
 
                     if not self.__pheromone_timer_active:
@@ -113,7 +113,7 @@ class Pond:
                         pygame.time.set_timer(Pond.PHEROMONE_ACTIVE_EVENT, 3000)
 
                 if event.type == Pond.PHEROMONE_ACTIVE_EVENT and self.__pheromone_active:
-                    self.__logger.info("Pheromone expired")
+                    self.__logger.info("Pheromon deactivated")
                     self.__pheromone_active = False
                     self.__pheromone_timer_active = False
                     pygame.time.set_timer(Pond.PHEROMONE_EVENT, 15000)

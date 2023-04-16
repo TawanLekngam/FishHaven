@@ -20,20 +20,19 @@ class PondInfoWidget(QWidget):
         pond_name_label.setFont(FONT_REG_22)
         frame_layout.addWidget(pond_name_label)
 
-        population_label = QLabel(f"Population: {population}")
-        population_label.setFont(FONT_REG_18)
-        frame_layout.addWidget(population_label)
-
-        status_label = QLabel("Status: Disconnect")
-        status_label.setFont(FONT_REG_18)
-        frame_layout.addWidget(status_label)
-
+        self.population_label = QLabel(f"Population: {population}")
+        self.population_label.setFont(FONT_REG_18)
+        frame_layout.addWidget(self.population_label)
+        
         layout = QVBoxLayout(self)
         layout.addWidget(frame)
         frame.setStyleSheet("border: 1px solid black;")
 
-        self.setFixedHeight(400)
+        # self.setFixedHeight(400)
         self.setLayout(layout)
+
+    def update(self, population: int):
+        self.population_label.setText(f"Population: {population}")
 
 
 

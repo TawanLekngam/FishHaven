@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (QHBoxLayout, QLabel, QMainWindow, QScrollArea, QVBoxLayout, QWidget)
 
 from config import WINDOW_SIZE
@@ -8,6 +8,7 @@ from LogDetailWidget import LogDetailWidget
 from style import get_font
 
 from PieChartWidget import PieChartWidget
+from GenesisBarWidget import GenesisBarWidget
 
 
 class Dashboard(QMainWindow):
@@ -25,8 +26,10 @@ class Dashboard(QMainWindow):
 
         main_layout = QVBoxLayout()
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        pie_chart = PieChartWidget(self, self.__fish_school)
-        main_layout.addWidget(pie_chart)
+
+        self.genesis_bar = GenesisBarWidget(self, self.__fish_school)
+        main_layout.addWidget(self.genesis_bar)
+
         fish_school_widget = FishSchoolWidget(self, self.__fish_school)
         main_layout.addWidget(fish_school_widget)
 
@@ -74,5 +77,12 @@ class Dashboard(QMainWindow):
         self.setWindowTitle("Dashboard")
         self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
+        timer = QTimer(self)
+        timer.timeout.connect(self.__update)
+        timer.start(1000)
+
     def add_log(self, log: LogDetailWidget):
         self.logs_container.layout().addWidget(log)
+
+    def __update(self):
+        self.genesis_bar.update()
