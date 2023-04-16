@@ -6,11 +6,9 @@ from FishSchool import FishSchool
 
 
 class PieChartWidget(QWidget):
-    def __init__(self, parent: QWidget, fishes: FishSchool):
+    def __init__(self, parent: QWidget):
         super().__init__(parent)
         self.series = QPieSeries()
-        for key, value in fishes.get_items():
-            self.series.append(key, len(value))
 
         self.chart = QChart()
         self.chart.addSeries(self.series)

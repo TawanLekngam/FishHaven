@@ -1,10 +1,11 @@
-from PySide6.QtWidgets import QWidget, QFrame, QVBoxLayout, QLabel
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 from style import get_font
 
+
 class PondInfoWidget(QWidget):
-    def __init__(self, parent=None, pond_name: str="Pond Name", population: int=0):
+    def __init__(self, parent=None, pond_name: str = "Pond Name", population: int = 0):
         super().__init__(parent)
         self.__name = pond_name
 
@@ -14,7 +15,8 @@ class PondInfoWidget(QWidget):
         frame = QFrame(self)
         frame_layout = QVBoxLayout(frame)
 
-        frame_layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
+        frame_layout.setAlignment(
+            Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
 
         pond_name_label = QLabel(self.__name)
         pond_name_label.setFont(FONT_REG_22)
@@ -23,7 +25,7 @@ class PondInfoWidget(QWidget):
         self.population_label = QLabel(f"Population: {population}")
         self.population_label.setFont(FONT_REG_18)
         frame_layout.addWidget(self.population_label)
-        
+
         layout = QVBoxLayout(self)
         layout.addWidget(frame)
         frame.setStyleSheet("border: 1px solid black;")
@@ -33,7 +35,6 @@ class PondInfoWidget(QWidget):
 
     def update(self, population: int):
         self.population_label.setText(f"Population: {population}")
-
 
 
 if __name__ == "__main__":

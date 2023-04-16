@@ -8,9 +8,8 @@ from FishSchool import FishSchool
 class FishSchoolWidget(QWidget):
     COL = 8
 
-    def __init__(self, parent, fishes: FishSchool):
+    def __init__(self, parent):
         super().__init__(parent)
-        self.__fishes = fishes
         self.grid_layout = QGridLayout()
         self.grid_layout.setSpacing(0)
         self.grid_layout.setContentsMargins(0, 0, 0, 0)
@@ -30,11 +29,7 @@ class FishSchoolWidget(QWidget):
 
         self.setFixedHeight(500)
 
-        timer = QTimer(self)
-        timer.timeout.connect(self.__update)
-        timer.start(1000)
-
-    def __update(self):
+    def update(self, fishes: FishSchool):
         while self.grid_layout.count():
             child = self.grid_layout.takeAt(0)
             widget = child.widget()
@@ -44,7 +39,7 @@ class FishSchoolWidget(QWidget):
         row = 0
         col = 0
 
-        for fish in self.__fishes.get_fishes():
+        for fish in fishes.get_fishes():
             fish_widget = FishDetailWidget(self, fish)
             self.grid_layout.addWidget(fish_widget, row, col)
             col += 1

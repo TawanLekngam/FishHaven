@@ -2,7 +2,7 @@ import os.path as path
 from logging import LogRecord
 from time import time
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
@@ -47,10 +47,6 @@ class LogDetailWidget(QWidget):
         self.time_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.time_label.setStyleSheet("color: gray;")
 
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.__update)
-        self.timer.start(1000)
-
         layout = QHBoxLayout(frame)
         layout.addWidget(self.image_label)
         layout.addSpacing(10)
@@ -66,7 +62,7 @@ class LogDetailWidget(QWidget):
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(frame)
 
-    def __update(self):
+    def update(self):
         time_diff = self.calculate_time()
         self.time_label.setText(time_diff)
 

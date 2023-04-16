@@ -1,20 +1,22 @@
+from typing import List
+
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import (QHBoxLayout, QLabel, QMainWindow, QScrollArea, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QHBoxLayout, QLabel, QMainWindow, QScrollArea,
+                               QVBoxLayout, QWidget)
 
 from config import WINDOW_SIZE
 from FishSchool import FishSchool
 from FishSchoolWidget import FishSchoolWidget
+from GenesisBarWidget import GenesisBarWidget
 from LogDetailWidget import LogDetailWidget
 from style import get_font
-
-from PieChartWidget import PieChartWidget
-from GenesisBarWidget import GenesisBarWidget
 
 
 class Dashboard(QMainWindow):
     def __init__(self, fish_school: FishSchool = None):
         super().__init__()
         self.__fish_school = fish_school
+        self.__log_list: List[LogDetailWidget] = []
 
         FONT_BOLD_24 = get_font("Poppins", 22, bold=True)
 
@@ -30,15 +32,17 @@ class Dashboard(QMainWindow):
         self.genesis_bar = GenesisBarWidget(self, self.__fish_school)
         main_layout.addWidget(self.genesis_bar)
 
-        fish_school_widget = FishSchoolWidget(self, self.__fish_school)
-        main_layout.addWidget(fish_school_widget)
+        self.fish_school_widget = FishSchoolWidget(self)
+        main_layout.addWidget(self.fish_school_widget)
 
         main_scroll_area = QScrollArea(self)
         main_scroll_area.setWidgetResizable(True)
-        main_scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        main_scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        main_scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        main_scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         main_scroll_area.setWidget(main_widget)
-        main_widget_layout.addLayout(main_layout) 
+        main_widget_layout.addLayout(main_layout)
 
         side_widget = QWidget(self)
         side_layout = QVBoxLayout(side_widget)
@@ -46,13 +50,16 @@ class Dashboard(QMainWindow):
 
         log_label = QLabel("Log")
         log_label.setFont(FONT_BOLD_24)
-        log_label.setStyleSheet("background-color: #E5ECF6; border: 1px solid black;")
+        log_label.setStyleSheet(
+            "background-color: #E5ECF6; border: 1px solid black;")
         side_layout.addWidget(log_label)
 
         log_scroll_area = QScrollArea(self)
         log_scroll_area.setWidgetResizable(True)
-        log_scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        log_scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        log_scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        log_scroll_area.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         side_layout.addWidget(log_scroll_area)
 
         self.logs_container = QWidget(self)
@@ -83,6 +90,10 @@ class Dashboard(QMainWindow):
 
     def add_log(self, log: LogDetailWidget):
         self.logs_container.layout().addWidget(log)
+        self.__log_list.append(log)
 
     def __update(self):
         self.genesis_bar.update()
+        for log in self.__log_list:
+            log.update()
+        self.fish_school_widget.update(self.__fish_school)
