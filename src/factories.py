@@ -51,6 +51,7 @@ class FishFactory:
 
     def __rand_lifespan(self):
         return 0 if random.random() <= 0.001 else random.randint(60, 120)
+        # return 0
 
     def __rand_movement(self):
         speed = random.randint(1, 5)

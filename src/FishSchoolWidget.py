@@ -6,7 +6,7 @@ from FishSchool import FishSchool
 
 
 class FishSchoolWidget(QWidget):
-    COL = 8
+    COL = 6
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -17,6 +17,7 @@ class FishSchoolWidget(QWidget):
 
         scroll_area = QScrollArea(self)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         scroll_area.setWidgetResizable(True)
         self.scroll_widget = QWidget(scroll_area)
         self.scroll_widget.setLayout(self.grid_layout)

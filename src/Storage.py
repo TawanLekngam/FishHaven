@@ -53,7 +53,7 @@ class Storage:
         id = fish.get_id()
         data = fish.get_data()
         time_left = data.get_lifespan() - data.get_age()
-        if time_left < 0:
+        if time_left <= 0:
             time_left = 0 if data.get_lifespan() != 0 else None
         self.redis.set(id, pickle.dumps(data), ex=time_left)
 
