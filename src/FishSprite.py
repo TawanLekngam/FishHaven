@@ -7,7 +7,8 @@ import pygame
 import config
 from Entity import Direction, Entity
 from FishData import FishData
-from movements import Movement
+from movements import BounceMovement, Movement
+from vivisystem import VivisystemFish
 
 
 class Size(Enum):
@@ -23,7 +24,7 @@ class LifeState(str, Enum):
 
 class FishSprite(Entity):
 
-    def __init__(self, data: FishData, movement: Movement):
+    def __init__(self, data: FishData, movement: Movement = BounceMovement()):
         Entity.__init__(self)
         self.__data = data
         self.__status = "in-pond"
@@ -79,15 +80,24 @@ class FishSprite(Entity):
 
     def get_age(self) -> int:
         return self.__data.get_age()
-    
+
     def get_pheromone(self) -> int:
         return int(self.__data.get_pheromone())
-    
+
     def get_pheromone_threshold(self) -> int:
         return self.__data.get_pheromone_threshold()
 
+    def get_gave_birth(self) -> bool:
+        return self.__data.get_gave_birth()
+
+    def get_crowd_threshold(self) -> int:
+        return self.__data.get_crowd_threshold()
+
     def get_lifespan(self) -> int:
         return self.__data.get_lifespan()
+
+    def set_gave_birth(self, gave_birth: bool):
+        self.__data.set_gave_birth(gave_birth)
 
     def is_pregnant(self):
         if self.__data.get_pheromone() >= self.__data.get_pheromone_threshold():
@@ -124,3 +134,10 @@ class FishSprite(Entity):
         if not self.is_alive():
             self.__status = "dead"
             self.die()
+
+    @classmethod
+    def from_vivisystemFish(cls, fish: VivisystemFish):
+        return cls(FishData(fish.fish_id, fish.genesis, fish.pheromone_threshold, fish.crowd_threshold, fish.lifetime, fish.parent_id))
+
+    def to_vivisystemFish(self):
+        return VivisystemFish(self.get_id(), self.get_parent_id(), self.get_genesis(), self.get_lifespan(), self.get_pheromone_threshold(), self.get_age())

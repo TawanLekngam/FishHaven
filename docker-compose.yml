@@ -1,82 +1,15 @@
-version: '3.9'
+version: '3'
 
 volumes:
-  data:
+  redis-data:
 
 services:
-  app:
-    build: .
-    depends_on:
-      - redis-master
-    command: /bin/sh -c "echo 'Waiting for Redis'; sleep 5; echo 'Redis is up - executing command'; python main.py"
-    volumes:
-      - ./app:/usr/src/app/redis_app
-    links:
-      - redis-sentinel1
-      - redis-sentinel2
-      - redis-sentinel3
-
-  redis_ui:
-    image: patrikx3/p3x-redis-ui:latest
-    ports:
-      - 7843:7843
-    depends_on:
-      - redis-master
-    volumes:
-      - ./p3x-redis-ui:/settings
-
-
-  redis-master:
-    container_name: redis-master
+  redis:
+    container_name: storage-redis
     image: redis:7.0.8-alpine
-    volumes:
-      - data:/data
     ports:
       - 6379:6379
-    networks:
-      - redis-replication
-
-  redis-slave:
-    container_name: redis-slave
-    image: redis:7.0.8-alpine
-    command: redis-server --slaveof redis-master 6379
-    links:
-      - redis-master
+    environment:
+      - REDIS_REPLICATION_MODE=master
     volumes:
-      - data:/data
-    ports:
-      - 6380:6379
-    networks:
-      - redis-replication
-
-
-  redis-sentinel1:
-    container_name: redis-sentinel1
-    build:
-      context: ./redis-sentinel
-    ports:
-      - 26379:26379
-    links:
-      - redis-master
-
-  redis-sentinel2:
-    container_name: redis-sentinel2
-    build:
-      context: ./redis-sentinel
-    ports:
-      - 26380:26379
-    links:
-      - redis-master
-
-  redis-sentinel3:
-    container_name: redis-sentinel3
-    build:
-      context: ./redis-sentinel
-    ports:
-      - 26381:26379
-    links:
-      - redis-master
-
-networks:
-  redis-replication:
-    driver: bridge
+      - redis-data:/data

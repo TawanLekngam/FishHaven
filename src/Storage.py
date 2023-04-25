@@ -46,9 +46,6 @@ class Storage:
                         f"Failed to connect to Redis at {host}:{port}, after {Storage.RETRIES} attempts")
                     sys.exit(-1)
 
-        self.pubsub = self.redis.pubsub(ignore_subscribe_messages=True)
-        self.pubsub.subscribe(config.POND_NAME, *config.OTHER_CHANNEL)
-
     def add_fish(self, fish: FishSprite):
         id = fish.get_id()
         data = fish.get_data()

@@ -1,4 +1,4 @@
-from PySide6.QtCore import QTimer, Qt
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGridLayout, QScrollArea, QVBoxLayout, QWidget
 
 from FishDetailWidget import FishDetailWidget

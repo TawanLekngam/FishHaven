@@ -51,7 +51,7 @@ class FishSchool(Group):
             for fish in self.__fishes[genesis].values():
                 fishes.append(fish)
         return fishes
-    
+
     def get_genesis(self):
         return list(self.__fishes.keys())
 
@@ -60,6 +60,6 @@ class FishSchool(Group):
         for fish in self.__fishes[genesis].values():
             fishes.append(fish)
         return fishes
-    
+
     def get_items(self):
         return self.__fishes.items()

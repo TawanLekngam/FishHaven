@@ -5,6 +5,7 @@ class FishData:
         self.__genesis = genesis
         self.__pheromone = 0
         self.__pheromone_threshold = pheromone_threshold
+        self.__gave_birth = False
         self.__crowd_threshold = crowd_threshold
         self.__age = 0
         self.__lifespan = lifespan
@@ -24,6 +25,9 @@ class FishData:
     def get_pheromone_threshold(self):
         return self.__pheromone_threshold
 
+    def get_gave_birth(self):
+        return self.__gave_birth
+
     def get_crowd_threshold(self):
         return self.__crowd_threshold
 
@@ -35,6 +39,9 @@ class FishData:
 
     def set_pheromone(self, pheromone: float):
         self.__pheromone = pheromone
+
+    def set_gave_birth(self, gave_birth: bool):
+        self.__gave_birth = gave_birth
 
     def set_age(self, age: int):
         self.__age = age

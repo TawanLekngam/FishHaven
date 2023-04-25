@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 from FishSprite import FishSprite
 from helper import surface_to_pixmap
@@ -19,7 +19,8 @@ class FishDetailWidget(QWidget):
         image_label.setPixmap(pixmap)
 
         id_label = QLabel(f"ID: {self.__fish.get_id()}", frame)
-        parent_id_label = QLabel(f"Parent ID: {self.__fish.get_parent_id()}", frame)
+        parent_id_label = QLabel(
+            f"Parent ID: {self.__fish.get_parent_id()}", frame)
         genesis_label = QLabel(f"Genesis: {self.__fish.get_genesis()}", frame)
         pheromone_text = f"Pheromone: {self.__fish.get_pheromone()}/{self.__fish.get_pheromone_threshold()}"
         pheromone_label = QLabel(pheromone_text, frame)
