@@ -41,10 +41,6 @@ class GenesisBarWidget(QWidget):
             self, config.POND_NAME, self.__fishes.get_population())
         scroll_area_content_layout.addWidget(self.pond_info)
 
-        for pond in config.OTHER_CHANNEL:
-            other_pond_info = PondInfoWidget(self, pond)
-            scroll_area_content_layout.addWidget(other_pond_info)
-
         layout = QVBoxLayout(self)
         layout.addWidget(frame)
         frame.setStyleSheet("border: 1px solid black;")
