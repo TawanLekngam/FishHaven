@@ -26,7 +26,7 @@ class Pond:
 
     def __init__(self, name: str, storage: Storage = None, client: VivisystemClient = None):
         self.__name: str = name
-        self.__data: VivisystemPond = VivisystemPond(self.__name)
+
         self.__storage: Storage = storage
         self.__client: VivisystemClient = client
         self.__connected_ponds = {}
@@ -51,7 +51,7 @@ class Pond:
         genesis = genesis if genesis else self.__name
         fish = fishFactory.generate_fish_sprite(genesis, parent_id)
         self.__fish_school.add_fish(fish)
-        self.__data.add_fish(fish.get_data())
+
         if self.__storage:
             self.__storage.add_fish(fish)
         self.__logger.info(f"Spawned fish {fish.get_id()}")
@@ -87,10 +87,12 @@ class Pond:
                     random_pond, fish.to_vivisystemFish())
                 self.remove_fish(fish)
 
-        if fish.get_crowd_threshold() < self.__fish_school.get_population():
-            random_pond = random.choice(list(self.__connected_ponds.values()))
-            self.__client.migrate_fish(random_pond, fish.to_vivisystemFish())
-            self.remove_fish(fish)
+            if fish.get_crowd_threshold() < self.__fish_school.get_population():
+                random_pond = random.choice(
+                    list(self.__connected_ponds.values()))
+                self.__client.migrate_fish(
+                    random_pond, fish.to_vivisystemFish())
+                self.remove_fish(fish)
 
     def handle_migrate(self, vivi_fish: VivisystemFish):
         fish = FishSprite.from_vivisystemFish(vivi_fish)
