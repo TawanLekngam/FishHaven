@@ -39,8 +39,13 @@ class FishSchoolWidget(QWidget):
 
         row = 0
         col = 0
+        count = 0
+        limit = 48
 
         for fish in fishes.get_fishes():
+            count += 1
+            if count > limit:
+                break
             fish_widget = FishDetailWidget(self, fish)
             self.grid_layout.addWidget(fish_widget, row, col)
             col += 1
