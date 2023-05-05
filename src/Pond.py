@@ -4,6 +4,7 @@ import sys
 
 import pygame
 from PySide6.QtWidgets import QApplication
+from ZombieFishSprite import ZombieFishSprite
 
 import config
 from Dashboard import Dashboard
@@ -20,6 +21,7 @@ UPDATE_DATA_EVENT = pygame.USEREVENT + 1
 PHEROMONE_EVENT = pygame.USEREVENT + 2
 PHEROMONE_ACTIVE_EVENT = pygame.USEREVENT + 3
 SEND_DATA_EVENT = pygame.USEREVENT + 4
+ZOMBIE_EVENT = pygame.USEREVENT + 5
 
 log = get_logger("pond")
 
@@ -125,8 +127,11 @@ class Pond:
         background = pygame.transform.scale(background, config.WINDOW_SIZE)
         clock = pygame.time.Clock()
 
+        moving_sprites = pygame.sprite.Group()
+
         pygame.time.set_timer(UPDATE_DATA_EVENT, 1000)
         pygame.time.set_timer(PHEROMONE_EVENT, 15000)
+        pygame.time.set_timer(ZOMBIE_EVENT, 30000)
 
         app = QApplication(sys.argv)
         dashboard = Dashboard(self.__fish_school)
@@ -173,6 +178,9 @@ class Pond:
                         self.name,
                         self.__fish_school.get_population(),
                         config.BIRTH_RATE))
+                    
+                if event.type == ZOMBIE_EVENT:
+                    moving_sprites.add(ZombieFishSprite())
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
@@ -186,8 +194,10 @@ class Pond:
                             self.spawn_fish("test")
 
             self.__fish_school.update_sprite()
+            moving_sprites.update()
             screen.blit(background, (0, 0))
             self.__fish_school.draw(screen)
+            moving_sprites.draw(screen)
             pygame.display.flip()
             app.processEvents()
 
