@@ -18,7 +18,7 @@ class Dashboard(QMainWindow):
         self.__fish_school = fish_school
         self.__log_list: List[LogDetailWidget] = []
 
-        FONT_BOLD_24 = get_font("Poppins", 22, bold=True)
+        FONT_BOLD_20 = get_font("Poppins", 20, bold=True)
 
         main_widget = QWidget(self)
         main_widget.setStyleSheet("border: 1px solid black;")
@@ -49,7 +49,7 @@ class Dashboard(QMainWindow):
         side_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         log_label = QLabel("Log")
-        log_label.setFont(FONT_BOLD_24)
+        log_label.setFont(FONT_BOLD_20)
         log_label.setStyleSheet(
             "background-color: #E5ECF6; border: 1px solid black;")
         side_layout.addWidget(log_label)
