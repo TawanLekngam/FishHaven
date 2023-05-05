@@ -1,10 +1,14 @@
-from Storage import Storage, connect_to_redis
+import config
 from Pond import Pond
+from Storage import Storage
+from vivisystem import VivisystemClient
+
 
 def main():
-    r = connect_to_redis()
-    storage = Storage(r)
-    p = Pond("doo-pond", storage)
+    storage = Storage(config.REDIS_HOST, config.REDIS_PORT,
+                      config.REDIS_PASSWORD, config.REDIS_DB)
+    client = VivisystemClient(config.VIVISYSTEM_URL, config.POND_NAME)
+    p = Pond(config.POND_NAME, storage, client)
     p.run()
 
 

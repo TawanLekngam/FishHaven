@@ -1,62 +1,78 @@
 import pickle
 import sys
-import redis
 import time
+from typing import List
 
+import redis
 
-from logging import getLogger
+import config
+from factories import fishFactory
+from FishSprite import FishSprite
+from Log import get_logger
 
-from models import FishData, FishSprite
-from scripts.movement import BounceMovement
-
-log = getLogger("redis")
-
-
-def connect_to_redis(host="localhost", port=6379, password=None, retries=3, retry_interval=1) -> redis.StrictRedis:
-    for i in range(retries):
-        try:
-            r = redis.StrictRedis(host=host,
-                                  port=port,
-                                  password=password)
-            if r.ping():
-                log.info(f"connected to Redis at {host}:{port}")
-                return r
-            else:
-                raise redis.ConnectionError()
-
-        except redis.ConnectionError:
-            if i < retries - 1:
-                log.warning(
-                    f"failed to connect to Redis at {host}:{port}, retrying in {retry_interval} second")
-                time.sleep(retry_interval)
-            else:
-                log.error(
-                    f"failed to connect to Redis at {host}:{port}, after {retries} attempts")
-                sys.exit(-1)
+log = get_logger("redis")
 
 
 class Storage:
-    def __init__(self, target_redis):
-        self.redis: redis.StrictRedis = target_redis
+    RETRIES = 3
+    INITIAL_INTERVAL = 1
+    BACKOFF_FACTOR = 2
 
-    def add_fish(self, fish: FishData):
-        """Add a fish to the redis database"""
-        try:
-            self.redis.set(fish.get_id(), pickle.dumps(
-                fish), ex=fish.get_life_left())
-        except redis.exceptions.ResponseError:
-            log.error("failed to add fish to redis")
+    def __init__(self, host="localhost", port=6379, password: str = None, db: int = 0):
+        self.host = host
+        self.port = port
+        self.password = password
+        self.redis: redis.StrictRedis = None
+        interval = Storage.INITIAL_INTERVAL
+
+        for i in range(Storage.RETRIES):
+            try:
+                self.redis = redis.StrictRedis(
+                    host=host, port=port, password=password, db=db)
+                if self.redis.ping():
+                    log.info(f"Connected to Redis at {host}:{port}")
+                    break
+                else:
+                    raise redis.ConnectionError()
+
+            except redis.ConnectionError:
+                if i < Storage.RETRIES - 1:
+                    log.warning(
+                        f"Failed to connect to Redis at {host}:{port}, retrying in {interval} seconds")
+                    time.sleep(interval)
+                    interval *= Storage.BACKOFF_FACTOR
+                else:
+                    log.error(
+                        f"Failed to connect to Redis at {host}:{port}, after {Storage.RETRIES} attempts")
+                    sys.exit(-1)
+
+    def add_fish(self, fish: FishSprite):
+        id = fish.get_id()
+        data = fish.get_data()
+        time_left = data.get_lifespan() - data.get_age()
+        if time_left <= 0:
+            time_left = 0 if data.get_lifespan() != 0 else None
+        self.redis.set(id, pickle.dumps(data), ex=time_left)
 
     def remove_fish(self, ids: list[str]):
         self.redis.delete(*ids)
 
-    def get_fishes(self):
-        """Get all fishes from the redis database"""
+    def get_fishes(self) -> List[FishSprite]:
         fishes_ids = self.redis.keys()
-        fishes_data = [
-            pickle.loads(data) for data in self.redis.mget(fishes_ids) if data is not None
-        ]
 
-        fishes_sprite = [FishSprite(fish_data, BounceMovement(3))
-                         for fish_data in fishes_data]
-        return dict(zip(fishes_ids, fishes_sprite))
+        fishes_data = []
+        for data in self.redis.mget(fishes_ids):
+            if data is not None:
+                fish_data = pickle.loads(data)
+                fishes_data.append(fish_data)
+
+        fishes_sprite = []
+        for fish_data in fishes_data:
+            fish_sprite = fishFactory.generate_fish_by_data(fish_data)
+            fishes_sprite.append(fish_sprite)
+
+        return fishes_sprite
+
+
+if __name__ == "__main__":
+    storage = Storage()
