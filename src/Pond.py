@@ -21,6 +21,8 @@ PHEROMONE_EVENT = pygame.USEREVENT + 2
 PHEROMONE_ACTIVE_EVENT = pygame.USEREVENT + 3
 SEND_DATA_EVENT = pygame.USEREVENT + 4
 
+log = get_logger("pond")
+
 
 class Pond:
 
@@ -31,7 +33,6 @@ class Pond:
         self.__client: VivisystemClient = client
         self.__connected_ponds = {}
         self.__fish_school = FishSchool()
-        self.__logger = get_logger("pond")
 
         self.__pheromone_active = False
         self.__pheromone_timer_active = False
@@ -45,7 +46,7 @@ class Pond:
             return
         for fish in fishes:
             self.__fish_school.add_fish(fish)
-        self.__logger.info(f"Loaded {len(fishes)} fishes")
+        log.info(f"Loaded {len(fishes)} fishes")
 
     def spawn_fish(self, genesis: str = None, parent_id: str = None):
         genesis = genesis if genesis else self.__name
@@ -54,7 +55,7 @@ class Pond:
 
         if self.__storage:
             self.__storage.add_fish(fish)
-        self.__logger.info(f"Spawned fish {fish.get_id()}")
+        log.info(f"Spawned fish {fish.get_id()}")
 
     def add_fish(self, fish: FishSprite):
         self.__fish_school.add_fish(fish)
@@ -97,7 +98,7 @@ class Pond:
     def handle_migrate(self, vivi_fish: VivisystemFish):
         fish = FishSprite.from_vivisystemFish(vivi_fish)
         self.add_fish(fish)
-        self.__logger.info(
+        log.info(
             f"Migrated fish {fish.get_id()} from {vivi_fish.genesis}")
 
     def handle_status(self, vivi_pond: VivisystemPond):
@@ -106,10 +107,13 @@ class Pond:
     def handle_disconnect(self, pond_name: str):
         if pond_name in self.__connected_ponds:
             del self.__connected_ponds[pond_name]
-            self.__logger.info(f"{pond_name} disconnected")
+            log.info(f"{pond_name} disconnected")
 
     def shutdown(self):
-        self.__logger.info("Shutting down")
+        if self.__client:
+            self.__client.disconnect()
+        log.info("Shutting down")
+        sys.exit()
 
     def run(self):
         pygame.init()
@@ -126,7 +130,7 @@ class Pond:
 
         app = QApplication(sys.argv)
         dashboard = Dashboard(self.__fish_school)
-        self.__logger.addHandler(LogHandler(dashboard))
+        log.addHandler(LogHandler(dashboard))
 
         if self.__storage:
             self.__load_fishes()
@@ -151,7 +155,7 @@ class Pond:
                     self.__fish_school.update_data(self.__update_fish)
 
                 if event.type == PHEROMONE_EVENT:
-                    self.__logger.info("Pheromon activated")
+                    log.info("Pheromon activated")
                     self.__pheromone_active = True
 
                     if not self.__pheromone_timer_active:
@@ -159,7 +163,7 @@ class Pond:
                         pygame.time.set_timer(PHEROMONE_ACTIVE_EVENT, 3000)
 
                 if event.type == PHEROMONE_ACTIVE_EVENT and self.__pheromone_active:
-                    self.__logger.info("Pheromon deactivated")
+                    log.info("Pheromon deactivated")
                     self.__pheromone_active = False
                     self.__pheromone_timer_active = False
                     pygame.time.set_timer(PHEROMONE_EVENT, 15000)
@@ -189,7 +193,6 @@ class Pond:
 
         pygame.quit()
         self.shutdown()
-        sys.exit(0)
 
 
 if __name__ == "__main__":

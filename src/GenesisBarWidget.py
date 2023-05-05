@@ -38,7 +38,7 @@ class GenesisBarWidget(QWidget):
         frame_layout.addWidget(scroll_area)
 
         self.pond_info = PondInfoWidget(
-            self, config.POND_NAME, self.__fishes.get_population())
+            self, config.POND_NAME, self.__fishes.get_population(), config.BIRTH_RATE)
         scroll_area_content_layout.addWidget(self.pond_info)
 
         layout = QVBoxLayout(self)

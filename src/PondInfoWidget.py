@@ -5,7 +5,7 @@ from style import get_font
 
 
 class PondInfoWidget(QWidget):
-    def __init__(self, parent=None, pond_name: str = "Pond Name", population: int = 0):
+    def __init__(self, parent=None, pond_name: str = "Pond Name", population: int = 0, birth_rate: float = 1.0):
         super().__init__(parent)
         self.__name = pond_name
 
@@ -26,11 +26,14 @@ class PondInfoWidget(QWidget):
         self.population_label.setFont(FONT_REG_18)
         frame_layout.addWidget(self.population_label)
 
+        self.birth_rate_label = QLabel(f"Birth Rate: {birth_rate}")
+        self.birth_rate_label.setFont(FONT_REG_18)
+        frame_layout.addWidget(self.birth_rate_label)
+
         layout = QVBoxLayout(self)
         layout.addWidget(frame)
         frame.setStyleSheet("border: 1px solid black;")
 
-        # self.setFixedHeight(400)
         self.setLayout(layout)
 
     def update(self, population: int):
