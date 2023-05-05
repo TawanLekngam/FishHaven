@@ -109,6 +109,8 @@ class FishSprite(Entity):
         return self.__data.get_lifespan() == 0
 
     def is_alive(self):
+        if self.__status == "dead":
+            return False
         return self.is_immortal() or self.get_age() < self.get_lifespan()
 
     def add_pheromone(self, amount: float):
@@ -118,6 +120,7 @@ class FishSprite(Entity):
         self.__data.set_pheromone(0)
 
     def die(self):
+        self.__status = "dead"
         self.kill()
 
     def update(self):

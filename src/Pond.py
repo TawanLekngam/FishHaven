@@ -131,7 +131,7 @@ class Pond:
 
         pygame.time.set_timer(UPDATE_DATA_EVENT, 1000)
         pygame.time.set_timer(PHEROMONE_EVENT, 15000)
-        pygame.time.set_timer(ZOMBIE_EVENT, 30000)
+        pygame.time.set_timer(ZOMBIE_EVENT, 20000)
 
         app = QApplication(sys.argv)
         dashboard = Dashboard(self.__fish_school)
@@ -181,6 +181,7 @@ class Pond:
                     
                 if event.type == ZOMBIE_EVENT:
                     moving_sprites.add(ZombieFishSprite())
+                    log.warning("Zombie fish spawned")
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
@@ -192,6 +193,14 @@ class Pond:
 
                         if event.key == pygame.K_s:
                             self.spawn_fish("test")
+
+            for fish in self.__fish_school.sprites():
+                for zombie in moving_sprites.sprites():
+                    if pygame.sprite.collide_rect(fish, zombie):
+                        self.__fish_school.remove_fish(fish)
+                        fish.kill()
+                        log.warning(f"Fish {fish.get_id()} eaten by zombie")
+                
 
             self.__fish_school.update_sprite()
             moving_sprites.update()

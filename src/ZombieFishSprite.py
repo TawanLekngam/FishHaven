@@ -26,6 +26,7 @@ class ZombieFishSprite(Entity):
         self.direction = Direction.LEFT
         self.__init_sprite()
         self.movement = BounceMovement()
+        self.lifespan = 750
 
     def __init_sprite(self):
         self.image = ZombieFishSprite.__cache[self.direction][0]
@@ -36,3 +37,6 @@ class ZombieFishSprite(Entity):
     def update(self):
         self.movement.move(self)
         self.image = ZombieFishSprite.__cache[self.direction][0]
+        self.lifespan -= 1
+        if self.lifespan <= 0:
+            self.kill()
