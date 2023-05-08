@@ -3,6 +3,7 @@ from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from FishSchool import FishSchool
+from style import get_font
 
 
 class PieChartWidget(QWidget):
@@ -10,9 +11,12 @@ class PieChartWidget(QWidget):
         super().__init__(parent)
         self.series = QPieSeries()
 
+        FONT_REG_18 = get_font("Poppins", 18)
+
         self.chart = QChart()
         self.chart.addSeries(self.series)
         self.chart.setTitle('Genesis')
+        self.chart.setTitleFont(FONT_REG_18)
 
         chart_view = QChartView(self.chart)
         chart_view.setRenderHint(QPainter.RenderHint.Antialiasing)

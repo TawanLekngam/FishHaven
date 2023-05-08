@@ -135,6 +135,7 @@ class Pond:
 
         app = QApplication(sys.argv)
         dashboard = Dashboard(self.__fish_school)
+        dashboard.show()
         log.addHandler(LogHandler(dashboard))
 
         if self.__storage:
