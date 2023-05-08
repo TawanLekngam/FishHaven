@@ -24,11 +24,11 @@ class LogDetailWidget(QWidget):
         frame.setFrameShape(QFrame.Panel)
         frame.setFrameShadow(QFrame.Sunken)
         frame.setFixedHeight(80)
-        frame.setStyleSheet("background-color: #E5ECF6; border-radius: 10px;")
+        frame.setStyleSheet("background-color: white; border-radius: 5px;")
 
         self.image_label = QLabel(frame)
         self.image_label.setFixedSize(54, 54)
-        self.image_label.setStyleSheet("background-color: transparent;")
+        self.image_label.setStyleSheet("background-color: white;")
 
         if icon:
             image = QImage(path.join(ICON_DIR, f"{icon}.png"))
