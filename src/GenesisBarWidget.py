@@ -29,6 +29,7 @@ class GenesisBarWidget(QWidget):
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         scroll_area_content = QWidget(self)
+        scroll_area_content.setStyleSheet("background-color: white;")
         scroll_area_content_layout = QHBoxLayout(scroll_area_content)
         scroll_area_content_layout.setContentsMargins(0, 0, 0, 0)
         scroll_area_content_layout.setAlignment(
@@ -43,7 +44,6 @@ class GenesisBarWidget(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addWidget(frame)
-        frame.setStyleSheet("border: 1px solid black;")
         self.setLayout(layout)
 
     def update(self):

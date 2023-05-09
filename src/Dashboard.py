@@ -17,22 +17,24 @@ class Dashboard(QMainWindow):
         super().__init__()
         self.__fish_school = fish_school
         self.__log_list: List[LogDetailWidget] = []
-
+        self.setStyleSheet("background-color:white; color:black; border: 0px; border-radius: 5px;")
+    
         FONT_BOLD_20 = get_font("Poppins", 20, bold=True)
 
         main_widget = QWidget(self)
-        main_widget.setStyleSheet("border: 1px solid black;")
-
+    
         main_widget_layout = QVBoxLayout(main_widget)
         main_widget_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        main_layout = QVBoxLayout()
+        main_layout = QVBoxLayout(main_widget)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         self.genesis_bar = GenesisBarWidget(self, self.__fish_school)
+        self.genesis_bar.setStyleSheet("background-color: #E5ECF6;")
         main_layout.addWidget(self.genesis_bar)
 
         self.fish_school_widget = FishSchoolWidget(self)
+        self.fish_school_widget.setStyleSheet("background-color: #E5ECF6;")
         main_layout.addWidget(self.fish_school_widget)
 
         main_scroll_area = QScrollArea(self)
@@ -50,11 +52,10 @@ class Dashboard(QMainWindow):
 
         log_label = QLabel("Log")
         log_label.setFont(FONT_BOLD_20)
-        log_label.setStyleSheet(
-            "background-color: #E5ECF6; border: 1px solid black;")
         side_layout.addWidget(log_label)
 
         log_scroll_area = QScrollArea(self)
+        log_scroll_area.setStyleSheet("background-color: #E5ECF6;")
         log_scroll_area.setWidgetResizable(True)
         log_scroll_area.setVerticalScrollBarPolicy(
             Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -71,7 +72,7 @@ class Dashboard(QMainWindow):
 
         window_width = self.geometry().width()
         side_widget.setMaximumWidth(window_width * 0.5)
-        side_widget.setStyleSheet("border: 1px solid black;")
+        side_widget.setStyleSheet("border: 0px;")
 
         layout = QHBoxLayout()
         layout.addWidget(main_scroll_area)

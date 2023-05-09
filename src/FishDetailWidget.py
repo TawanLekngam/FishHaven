@@ -36,7 +36,7 @@ class FishDetailWidget(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addWidget(frame)
-        frame.setStyleSheet("border: 1px solid black;")
+        frame.setStyleSheet("border: 0px; border-radius:5px; background-color: white;")
 
         self.setFixedSize(150, 300)
         self.setLayout(layout)

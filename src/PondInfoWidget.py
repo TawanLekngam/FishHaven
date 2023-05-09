@@ -9,7 +9,7 @@ class PondInfoWidget(QWidget):
         super().__init__(parent)
         self.__name = pond_name
 
-        FONT_REG_22 = get_font("Poppins", 22)
+        FONT_BOLD_20 = get_font("Poppins", 20, bold=True)
         FONT_REG_18 = get_font("Poppins", 18)
 
         frame = QFrame(self)
@@ -19,7 +19,7 @@ class PondInfoWidget(QWidget):
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
 
         pond_name_label = QLabel(self.__name)
-        pond_name_label.setFont(FONT_REG_22)
+        pond_name_label.setFont(FONT_BOLD_20)
         frame_layout.addWidget(pond_name_label)
 
         self.population_label = QLabel(f"Population: {population}")
@@ -32,7 +32,6 @@ class PondInfoWidget(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addWidget(frame)
-        frame.setStyleSheet("border: 1px solid black;")
 
         self.setLayout(layout)
 
