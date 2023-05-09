@@ -16,6 +16,7 @@ from LogHandler import LogHandler
 from Storage import Storage
 from vivisystem import (EventType, VivisystemClient, VivisystemFish,
                         VivisystemPond)
+from ViviDashboard import ViviDashboard
 
 UPDATE_DATA_EVENT = pygame.USEREVENT + 1
 PHEROMONE_EVENT = pygame.USEREVENT + 2
@@ -132,10 +133,11 @@ class Pond:
         pygame.time.set_timer(UPDATE_DATA_EVENT, 1000)
         pygame.time.set_timer(PHEROMONE_EVENT, 15000)
         pygame.time.set_timer(ZOMBIE_EVENT, 20000)
+        pygame.time.set_timer(SEND_DATA_EVENT, 2000)
 
         app = QApplication(sys.argv)
         dashboard = Dashboard(self.__fish_school)
-        dashboard.show()
+        vividashboard = ViviDashboard(self.__connected_ponds)
         log.addHandler(LogHandler(dashboard))
 
         if self.__storage:
@@ -176,7 +178,7 @@ class Pond:
 
                 if event.type == SEND_DATA_EVENT:
                     self.__client.send_status(VivisystemPond(
-                        self.name,
+                        self.__name,
                         self.__fish_school.get_population(),
                         config.BIRTH_RATE))
                     
@@ -188,6 +190,9 @@ class Pond:
                     if event.key == pygame.K_UP:
                         dashboard.show()
 
+                    if event.key == pygame.K_DOWN and self.__client:
+                        vividashboard.show()
+
                     if config.DEBUG_MODE:
                         if event.key == pygame.K_a:
                             self.spawn_fish()
@@ -196,6 +201,8 @@ class Pond:
                             self.spawn_fish("test")
 
             for fish in self.__fish_school.sprites():
+                if fish.is_immortal():
+                    continue
                 for zombie in moving_sprites.sprites():
                     if pygame.sprite.collide_rect(fish, zombie):
                         self.__fish_school.remove_fish(fish)
