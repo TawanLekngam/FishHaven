@@ -2,8 +2,7 @@ from os.path import dirname, abspath, join
 
 
 PATH = {
-    "root": dirname(dirname(abspath(__file__))),
-    "assets": join(dirname(dirname(abspath(__file__))), "assets"),
+    "assets": join(dirname(abspath(__file__)), "assets"),
 }
 
 REDIS = {
@@ -14,4 +13,5 @@ REDIS = {
 }
 
 if __name__ == "__main__":
+    print(PATH["src"])
     print(PATH["assets"])
