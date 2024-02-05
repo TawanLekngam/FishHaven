@@ -3,7 +3,7 @@ from pygame.sprite import Group
 from random import randint
 
 from storage import Storage
-from fish import Fish, Movement
+from fish import Fish
 from model import FishModel
 
 
@@ -25,7 +25,7 @@ class Pond:
 
         allSprites = Group()
 
-        self._spawnFish(allSprites)  # debug: spawn a fish
+        # self._spawnFish(allSprites)  # debug: spawn a fish
         running = True
         while running:
             for event in pygame.event.get():
@@ -56,7 +56,7 @@ class Pond:
             genesis = self.name
 
         model = FishModel(generateId(), genesis)
-        fish = Fish(model, Movement(1))
+        fish = Fish(model)
         group.add(fish)
 
 
