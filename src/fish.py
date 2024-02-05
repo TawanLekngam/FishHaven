@@ -9,7 +9,6 @@ from pygame.surface import Surface
 from pygame.transform import flip, scale
 from typing import List, Dict, AnyStr
 
-
 from model import FishModel
 from setting import PATH
 
@@ -22,11 +21,11 @@ class Fish(Sprite):
 
     def __init__(self, model: FishModel, movement: Movement):
         super().__init__()
+        self.model = model
+        self.movement = movement
         self._loadSkin(model.genesis)
         self.image: Surface = Fish.skinL[model.genesis][0]
         self.rect: Rect = self.image.get_rect()
-        self.model = model
-        self.movement = movement
 
     def _loadSkin(self, genesis: str):
         if genesis not in Fish.skinL:
@@ -34,11 +33,14 @@ class Fish(Sprite):
 
             if isdir(path):
                 files = [f for f in listdir(path) if f.endswith(".png")]
+                print("f", files)
+                print("g", genesis)
                 Fish.skinL[genesis] = [scale(load(join(path, f)), SCALE) for f in files]
-                Fish.skinR[genesis] = [flip(s) for s in Fish.skinL[genesis]]
+                Fish.skinR[genesis] = [flip(s, True, False) for s in Fish.skinL[genesis]]
 
     def update(self):
-        self.movement.move(self)
+        # self.movement.move(self)
+        pass
 
 
 class Movement:
