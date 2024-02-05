@@ -66,3 +66,12 @@ class NodeConnection:
 
         self.castListenThread = Thread(target=_listenCast)
         self.castListenThread.start()
+
+    def stopListen(self):
+        self.castSocket.sendto("stop".encode(), (self.localIp, MULTICAST_PORT))
+        self.castListenThread.join()
+
+    def close(self):
+        if self.castListenThread.is_alive():
+            self.stopListen()
+        self.castSocket.close()
