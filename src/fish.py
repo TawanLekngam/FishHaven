@@ -71,30 +71,30 @@ class Fish(Sprite):
             self.image = Fish.skin_r[self.model.genesis][int(self.frame)]
 
     def _move(self):
-        screenRect = get_surface().get_rect()
+        screen_rect = get_surface().get_rect()
         if self.direction_x == Direction.LEFT:
             self.rect.x -= self.speed
-            if self.rect.left < screenRect.left:
+            if self.rect.left < screen_rect.left:
                 self.direction_x = Direction.RIGHT
         else:
             self.rect.x += self.speed
-            if self.rect.right > screenRect.right:
+            if self.rect.right > screen_rect.right:
                 self.direction_x = Direction.LEFT
 
         if self.direction_y == Direction.UP:
             self.rect.y -= self.speed
-            if self.rect.top < screenRect.top:
+            if self.rect.top < screen_rect.top:
                 self.direction_y = Direction.DOWN
         else:
             self.rect.y += self.speed
-            if self.rect.bottom > screenRect.bottom:
+            if self.rect.bottom > screen_rect.bottom:
                 self.direction_y = Direction.UP
         self._update_image()
 
     def _random_position(self):
-        screenRect = get_surface().get_rect()
-        self.rect.x = randint(0, screenRect.width - self.rect.width)
-        self.rect.y = randint(0, screenRect.height - self.rect.height)
+        screen_rect = get_surface().get_rect()
+        self.rect.x = randint(0, screen_rect.width - self.rect.width)
+        self.rect.y = randint(0, screen_rect.height - self.rect.height)
 
     def _random_direction(self):
         self.direction_x = Direction(randint(0, 1))
