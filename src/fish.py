@@ -28,8 +28,8 @@ class Direction(Enum):
 
 
 class Fish(Sprite):
-    _skinL: Dict[AnyStr, List[Surface]] = {}
-    _skinR: Dict[AnyStr, List[Surface]] = {}
+    skin_l: Dict[AnyStr, List[Surface]] = {}
+    skin_r: Dict[AnyStr, List[Surface]] = {}
 
     direction_x: Direction
     direction_y: Direction
@@ -47,28 +47,28 @@ class Fish(Sprite):
         self._random_direction()
 
     def _load_skin(self, genesis: str):
-        if genesis not in Fish._skinL:
+        if genesis not in Fish.skin_l:
             path = join(PATH["assets"], genesis)
 
             if isdir(path):
                 files = [f for f in listdir(path) if f.endswith(".png")]
-                Fish._skinL[genesis] = [scale(load(join(path, f)), SCALE)
+                Fish.skin_l[genesis] = [scale(load(join(path, f)), SCALE)
                                         for f in files]
-                Fish._skinR[genesis] = [flip(s, True, False)
-                                        for s in Fish._skinL[genesis]]
+                Fish.skin_r[genesis] = [flip(s, True, False)
+                                        for s in Fish.skin_l[genesis]]
 
-        self.image = Fish._skinL[genesis][0]
+        self.image = Fish.skin_l[genesis][0]
         self.rect = self.image.get_rect()
 
     def update(self):
         self._move()
 
     def _update_image(self):
-        self.frame = (self.frame + 0.1) % len(Fish._skinL[self.model.genesis])
+        self.frame = (self.frame + 0.1) % len(Fish.skin_l[self.model.genesis])
         if self.direction_x == Direction.LEFT:
-            self.image = Fish._skinL[self.model.genesis][int(self.frame)]
+            self.image = Fish.skin_l[self.model.genesis][int(self.frame)]
         else:
-            self.image = Fish._skinR[self.model.genesis][int(self.frame)]
+            self.image = Fish.skin_r[self.model.genesis][int(self.frame)]
 
     def _move(self):
         screenRect = get_surface().get_rect()
