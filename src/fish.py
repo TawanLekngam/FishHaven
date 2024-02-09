@@ -3,6 +3,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import List, Dict, AnyStr
 from random import randint
+from time import time
 
 from os import listdir
 from os.path import join, isdir
@@ -16,6 +17,7 @@ from pygame.transform import flip, scale
 
 from model import FishModel
 from setting import PATH
+
 
 SCALE = (100, 100)
 
@@ -42,6 +44,8 @@ class Fish(Sprite):
         self.model = model
         self.frame = 0
 
+        self._current_time = time()
+
         self._load_skin(model.genesis)
         self._random_position()
         self._random_direction()
@@ -61,6 +65,7 @@ class Fish(Sprite):
         self.rect = self.image.get_rect()
 
     def update(self):
+        self._update_time()
         self._move()
 
     def _update_image(self):
@@ -99,3 +104,15 @@ class Fish(Sprite):
     def _random_direction(self):
         self.direction_x = Direction(randint(0, 1))
         self.direction_y = Direction(randint(2, 3))
+
+    def _update_time(self):
+        if not self.is_alive():
+            self.kill()
+            return
+
+        if time() - self._current_time > 1:
+            self._current_time = time()
+            self.model.lifespan -= 1
+
+    def is_alive(self):
+        return self.model.lifespan > 0
